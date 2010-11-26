@@ -29,7 +29,10 @@ BUILD_DIR=build
 BUILD_MAIN_DIR=${BUILD_DIR}/main
 BUILD_TEST_DIR=${BUILD_DIR}/test
 
-DOC_DIR=doc
+RESOURCES_DIR=resources
+REPORT_TOOLS_DIR=$(RESOURCES_DIR)/report-tools
+LOCALES_DIR=$(RESOURCES_DIR)/LC_MESSAGES
+
 REPORT_DIR=report
 
 BIN_DIR=bin
@@ -50,7 +53,7 @@ default: prod
 all:	clean init ctags cscope report
 
 report: clean init
-	cp -f $(DOC_DIR)/index.html $(REPORT_DIR)/
+	cp -f $(REPORT_TOOLS_DIR)/index.html $(REPORT_DIR)/
 	sed -i 's/@PROJECT_NAME@/$(PROJECT_NAME)/' $(REPORT_DIR)/index.html
 	make ctags
 	make doxygen
@@ -61,7 +64,7 @@ report: clean init
 	make ccm
 
 clean:	clean.build
-	rm -rf $(REPORT_DIR) $(TAGS_FILE) $(CSCOPE_FILES) LC_MESSAGES/mo
+	rm -rf $(REPORT_DIR) $(TAGS_FILE) $(CSCOPE_FILES) $(LOCALES_DIR)/mo
 
 clean.build:
 	rm -rf $(BUILD_DIR) $(BIN_DIR)
@@ -78,13 +81,12 @@ cscope:
 	cscope -b -q -R
 
 xgettext:
-	mkdir -p LC_MESSAGES/po
-	xgettext --language C++ --default-domain $(PROJECT_NAME) --sort-output --output-dir LC_MESSAGES --output $(PROJECT_NAME).po --keyword=_ $(SRC_FILES)
-	msginit --locale fr_CA.utf8 --output LC_MESSAGES/po/fr.po --input LC_MESSAGES/$(PROJECT_NAME).po
+	xgettext --language C++ --default-domain $(PROJECT_NAME) --sort-output --output-dir $(LOCALES_DIR) --output $(PROJECT_NAME).po --keyword=_ $(SRC_FILES)
+	msginit --locale fr_CA.utf8 --output $(LOCALES_DIR)/po/fr.po --input $(LOCALES_DIR)/$(PROJECT_NAME).po
 
 msgfmt:
-	mkdir -p LC_MESSAGES/mo/fr
-	msgfmt --check --output LC_MESSAGES/mo/fr/$(PROJECT_NAME).mo LC_MESSAGES/po/fr.po
+	mkdir -p $(LOCALES_DIR)/mo/fr
+	msgfmt --check --output $(LOCALES_DIR)/mo/fr/$(PROJECT_NAME).mo $(LOCALES_DIR)/po/fr.po
 
 build:	init compile link
 	ln -sf ../$(MAIN_EXEC_APP) $(BIN_DIR)/$(PROJECT_NAME)
@@ -108,7 +110,7 @@ link.test:
 test:	build.test
 	mkdir -p $(REPORT_DIR)/test
 	$(TEST_EXEC_APP) --gtest_shuffle --gtest_output=xml:$(REPORT_DIR)/test/$(PROJECT_NAME)_TEST.xml
-	cp -f $(DOC_DIR)/gtest.xsl $(REPORT_DIR)/test/
+	cp -f $(REPORT_TOOLS_DIR)/gtest.xsl $(REPORT_DIR)/test/
 	sed -i 's/<?xml version="1.0" encoding="UTF-8"?>/<?xml version="1.0" encoding="UTF-8"?>\n<?xml-stylesheet type="text\/xsl" href="gtest.xsl"?>/' $(REPORT_DIR)/test/$(PROJECT_NAME)_TEST.xml
 
 prod: clean
@@ -118,22 +120,22 @@ prod: clean
 install:
 	cp -f bin/$(PROJECT_NAME) $(PREFIX)/
 	mkdir -p /usr/share/locale-langpack/fr_CA/LC_MESSAGES
-	cp -f LC_MESSAGES/mo/fr/$(PROJECT_NAME).mo /usr/share/locale-langpack/fr_CA/LC_MESSAGES/
+	cp -f $(LOCALES_DIR)/mo/fr/$(PROJECT_NAME).mo /usr/share/locale-langpack/fr_CA/LC_MESSAGES/
 
 astyle:
-	astyle --options=doc/astyle.cfg $(SRC_FILES)
+	astyle --options=$(REPORT_TOOLS_DIR)/astyle.cfg $(SRC_FILES)
 
 valgrind: clean.build build build.test
 	mkdir -p $(REPORT_DIR)/valgrind
 	valgrind --xml=yes -v --leak-check=full --xml-file=$(REPORT_DIR)/valgrind/$(PROJECT_NAME).xml $(MAIN_EXEC_APP)
 	valgrind --xml=yes -v --leak-check=full --xml-file=$(REPORT_DIR)/valgrind/$(PROJECT_NAME)_TEST.xml $(TEST_EXEC_APP)
-	cp -f $(DOC_DIR)/valgrind.xsl $(REPORT_DIR)/valgrind/
+	cp -f $(REPORT_TOOLS_DIR)/valgrind.xsl $(REPORT_DIR)/valgrind/
 	sed -i 's/<?xml version="1.0"?>/<?xml version="1.0"?>\n<?xml-stylesheet type="text\/xsl" href="valgrind.xsl"?>/' $(REPORT_DIR)/valgrind/$(PROJECT_NAME).xml
 	sed -i 's/<?xml version="1.0"?>/<?xml version="1.0"?>\n<?xml-stylesheet type="text\/xsl" href="valgrind.xsl"?>/' $(REPORT_DIR)/valgrind/$(PROJECT_NAME)_TEST.xml
 
 doxygen:
 	mkdir -p $(REPORT_DIR)/doxygen
-	doxygen doc/doxyfile
+	doxygen $(REPORT_TOOLS_DIR)/doxyfile
 
 lcov: clean.build test
 	mkdir -p $(REPORT_DIR)/lcov
@@ -147,8 +149,8 @@ cccc:
 
 ccm:
 	mkdir -p $(REPORT_DIR)/ccm
-	$(DOC_DIR)/ccm.exe $(DOC_DIR)/ccm.cfg > $(REPORT_DIR)/ccm/ccm.xml
-	cp -f $(DOC_DIR)/ccm.xsl $(REPORT_DIR)/ccm/
+	$(REPORT_TOOLS_DIR)/ccm.exe $(REPORT_TOOLS_DIR)/ccm.cfg > $(REPORT_DIR)/ccm/ccm.xml
+	cp -f $(REPORT_TOOLS_DIR)/ccm.xsl $(REPORT_DIR)/ccm/
 	sed -i '1i<?xml version="1.0"?>\n<?xml-stylesheet type="text\/xsl" href="ccm.xsl"?>' $(REPORT_DIR)/ccm/ccm.xml
 
 .PHONY:	default all report clean clean.build init ctags cscope xgettext msgfmt build compile link run build.test compile.test link.test test prod astyle valgrind doxygen lcov cccc ccm

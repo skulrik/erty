@@ -98,6 +98,9 @@ test:	build.test
 	cp -f $(DOC_DIR)/gtest.xsl $(REPORT_DIR)/test/
 	sed -i 's/<?xml version="1.0" encoding="UTF-8"?>/<?xml version="1.0" encoding="UTF-8"?>\n<?xml-stylesheet type="text\/xsl" href="gtest.xsl"?>/' $(REPORT_DIR)/test/$(PROJECT_NAME)_TEST.xml
 
+prod: clean init
+	make "RELEASE=1" build
+
 astyle:
 	astyle --options=doc/astyle.cfg $(SRC_FILES)
 
@@ -129,7 +132,7 @@ ccm:
 	cp -f $(DOC_DIR)/ccm.xsl $(REPORT_DIR)/ccm/
 	sed -i '1i<?xml version="1.0"?>\n<?xml-stylesheet type="text\/xsl" href="ccm.xsl"?>' $(REPORT_DIR)/ccm/ccm.xml
 
-.PHONY:	all report clean clean.build init ctags cscope build compile link run build.test compile.test link.test test astyle valgrind doxygen lcov cccc ccm
+.PHONY:	all report clean clean.build init ctags cscope build compile link run build.test compile.test link.test test prod astyle valgrind doxygen lcov cccc ccm
 
 $(BUILD_MAIN_DIR)/%.o : $(SRC_MAIN_DIR)/%.cpp
 	$(CXX) -c $(CXXFLAGS) $(CXXINCLUDES) -o $@ $<

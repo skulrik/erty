@@ -1,5 +1,7 @@
 PROJECT_NAME=CPP_APP_TEMPLATE
 
+PREFIX=/usr/local/bin
+
 CXX=g++
 CXXFLAGS=-pedantic -Wall -Wextra -Werror -std=c++0x -D_FORTIFY_SOURCE=2
 
@@ -43,9 +45,11 @@ TEST_OBJECTS=$(shell find $(SRC_DIR) -name *.cpp |grep -v 'main.cpp' |sed 's/.cp
 MAIN_EXEC_APP=$(BUILD_MAIN_DIR)/$(PROJECT_NAME)
 TEST_EXEC_APP=$(BUILD_TEST_DIR)/$(PROJECT_NAME)
 
+default: prod
+
 all:	clean init ctags cscope report
 
-report: init
+report: clean init
 	cp -f $(DOC_DIR)/index.html $(REPORT_DIR)/
 	sed -i 's/@PROJECT_NAME@/$(PROJECT_NAME)/' $(REPORT_DIR)/index.html
 	make ctags
@@ -57,7 +61,7 @@ report: init
 	make ccm
 
 clean:	clean.build
-	rm -rf $(REPORT_DIR) $(TAGS_FILE) $(CSCOPE_FILES)
+	rm -rf $(REPORT_DIR) $(TAGS_FILE) $(CSCOPE_FILES) LC_MESSAGES/mo
 
 clean.build:
 	rm -rf $(BUILD_DIR) $(BIN_DIR)
@@ -72,6 +76,15 @@ ctags:
 
 cscope:
 	cscope -b -q -R
+
+xgettext:
+	mkdir -p LC_MESSAGES/po
+	xgettext --language C++ --default-domain $(PROJECT_NAME) --sort-output --output-dir LC_MESSAGES --output $(PROJECT_NAME).po --keyword=_ $(SRC_FILES)
+	msginit --locale fr_CA.utf8 --output LC_MESSAGES/po/fr.po --input LC_MESSAGES/$(PROJECT_NAME).po
+
+msgfmt:
+	mkdir -p LC_MESSAGES/mo/fr
+	msgfmt --check --output LC_MESSAGES/mo/fr/$(PROJECT_NAME).mo LC_MESSAGES/po/fr.po
 
 build:	init compile link
 	ln -sf ../$(MAIN_EXEC_APP) $(BIN_DIR)/$(PROJECT_NAME)
@@ -98,8 +111,14 @@ test:	build.test
 	cp -f $(DOC_DIR)/gtest.xsl $(REPORT_DIR)/test/
 	sed -i 's/<?xml version="1.0" encoding="UTF-8"?>/<?xml version="1.0" encoding="UTF-8"?>\n<?xml-stylesheet type="text\/xsl" href="gtest.xsl"?>/' $(REPORT_DIR)/test/$(PROJECT_NAME)_TEST.xml
 
-prod: clean init
+prod: clean
 	make "RELEASE=1" build
+	make msgfmt
+
+install:
+	cp -f bin/$(PROJECT_NAME) $(PREFIX)/
+	mkdir -p /usr/share/locale-langpack/fr_CA/LC_MESSAGES
+	cp -f LC_MESSAGES/mo/fr/$(PROJECT_NAME).mo /usr/share/locale-langpack/fr_CA/LC_MESSAGES/
 
 astyle:
 	astyle --options=doc/astyle.cfg $(SRC_FILES)
@@ -132,7 +151,7 @@ ccm:
 	cp -f $(DOC_DIR)/ccm.xsl $(REPORT_DIR)/ccm/
 	sed -i '1i<?xml version="1.0"?>\n<?xml-stylesheet type="text\/xsl" href="ccm.xsl"?>' $(REPORT_DIR)/ccm/ccm.xml
 
-.PHONY:	all report clean clean.build init ctags cscope build compile link run build.test compile.test link.test test prod astyle valgrind doxygen lcov cccc ccm
+.PHONY:	default all report clean clean.build init ctags cscope xgettext msgfmt build compile link run build.test compile.test link.test test prod astyle valgrind doxygen lcov cccc ccm
 
 $(BUILD_MAIN_DIR)/%.o : $(SRC_MAIN_DIR)/%.cpp
 	$(CXX) -c $(CXXFLAGS) $(CXXINCLUDES) -o $@ $<

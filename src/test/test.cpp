@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "mainImpl.h"
+#include "internationalization.h"
 
 #include <iostream>
 #include <sstream>
@@ -41,7 +42,7 @@ TEST_F(MainTest, ExtractedFunctionReturnsZeroUponSuccess)
 TEST_F(MainTest, CorrectOuputPutToCout)
 {
     std::stringstream expected;
-    expected << "Hello, World!" << std::endl;
+    expected << _("Hello, World!") << std::endl;
     mainImpl(0, 0);
     ASSERT_EQ(expected.str(), stream->str());
 }

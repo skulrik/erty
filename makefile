@@ -7,16 +7,16 @@ CXXINCLUDES=-I. -I$(SRC_MAIN_DIR)
 CXXLIBS=
 
 ifdef RELEASE
-    CXXFLAGS+= -s -O3
+  CXXFLAGS+= -s -O3
 endif
 
 ifdef DEBUG
-    CXXFLAGS+= -g
+  CXXFLAGS+= -g
 endif
 
 ifdef PROFILE
-    CXXFLAGS+= -fprofile-arcs -ftest-coverage  -pg
-    CXXLIBS+= -lgcov
+  CXXFLAGS+= -fprofile-arcs -ftest-coverage -pg
+  CXXLIBS+= -lgcov
 endif
 
 SRC_DIR=src
@@ -120,7 +120,7 @@ lcov: clean.build test
 	mkdir -p $(REPORT_DIR)/lcov
 	lcov --derive-func-data --directory $(BUILD_DIR) --base-directory . --capture --output-file $(REPORT_DIR)/lcov/$(PROJECT_NAME).capture.info
 	lcov --derive-func-data --extract $(REPORT_DIR)/lcov/$(PROJECT_NAME).capture.info *$(PROJECT_NAME)* --output-file $(REPORT_DIR)/lcov/$(PROJECT_NAME).extract.info
-	genhtml -s -k  --legend --demangle-cpp $(REPORT_DIR)/lcov/$(PROJECT_NAME).extract.info -o $(REPORT_DIR)/lcov/
+	genhtml -s -k --legend --demangle-cpp $(REPORT_DIR)/lcov/$(PROJECT_NAME).extract.info -o $(REPORT_DIR)/lcov/
 
 cccc:
 	mkdir -p $(REPORT_DIR)/cccc

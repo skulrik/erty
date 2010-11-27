@@ -6,7 +6,7 @@ CXX=g++
 CXXFLAGS=-pedantic -Wall -Wextra -Werror -std=c++0x -D_FORTIFY_SOURCE=2
 
 CXXINCLUDES=-I. -I$(SRC_MAIN_DIR)
-CXXLIBS=
+CXXLIBS=-lboost_program_options
 
 ifdef RELEASE
   CXXFLAGS+= -s -O3

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-25 22:48-0500\n"
+"POT-Creation-Date: 2010-11-26 22:24-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,18 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/main/mainImpl.cpp:16
+#: src/main/program-options.cpp:6
+msgid "Allowed options"
+msgstr ""
+
+#: src/main/program-options.cpp:9
+msgid "Display this message"
+msgstr ""
+
+#: src/test/test.cpp:45 src/main/mainImpl.cpp:21
 msgid "Hello, World!"
+msgstr ""
+
+#: src/main/program-options.cpp:23
+msgid "Usage: CPP_APP_TEMPLATE [options]"
 msgstr ""

@@ -1,10 +1,10 @@
 #include "program-options.h"
 #include "internationalization.h"
 
-#include <iostream>
+#include <sstream>
 
 ProgramOptions::ProgramOptions(int argc, char** argv) :
-    argc(argc), argv(argv), desc(_("Allowed options")), vm()
+    desc(_("Allowed options")), vm()
 {
     desc.add_options()
     ("help,h", _("Display this message"));
@@ -18,9 +18,11 @@ bool ProgramOptions::isHelpMode()
     return (vm.count("help"));
 }
 
-void ProgramOptions::printUsage()
+std::string ProgramOptions::getUsage()
 {
-    std::cout << "CPP_APP_TEMPLATE version 1.0"         << std::endl
-              << _("Usage: CPP_APP_TEMPLATE [options]") << std::endl;
-    std::cout << desc;
+    std::stringstream ss;
+    ss << "CPP_APP_TEMPLATE version 1.0"         << std::endl
+       << _("Usage: CPP_APP_TEMPLATE [options]") << std::endl
+       << desc;
+    return ss.str();
 }

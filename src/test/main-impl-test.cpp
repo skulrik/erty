@@ -5,14 +5,14 @@
 #include <iostream>
 #include <sstream>
 
-class MainTest : public ::testing::Test
+class MainImplTest : public ::testing::Test
 {
 protected:
-    MainTest()
+    MainImplTest()
     {
     }
 
-    virtual ~MainTest()
+    virtual ~MainImplTest()
     {
     }
 
@@ -33,13 +33,13 @@ protected:
     std::stringstream *stream;
 };
 
-TEST_F(MainTest, ExtractedFunctionReturnsZeroUponSuccess)
+TEST_F(MainImplTest, ExtractedFunctionReturnsZeroUponSuccess)
 {
     int result = mainImpl(0, 0);
     ASSERT_EQ(0, result);
 }
 
-TEST_F(MainTest, CorrectOuputPutToCout)
+TEST_F(MainImplTest, CorrectOuputPutToCout)
 {
     std::stringstream expected;
     expected << _("Hello, World!") << std::endl;
@@ -47,14 +47,14 @@ TEST_F(MainTest, CorrectOuputPutToCout)
     ASSERT_EQ(expected.str(), stream->str());
 }
 
-TEST_F(MainTest, ExtractedFunctionReturnsOneUponHelpModeAsked)
+TEST_F(MainImplTest, ExtractedFunctionReturnsOneUponHelpModeAsked)
 {
     const char* cmdLine[] = { "APP_NAME", "--help" };
     int result = mainImpl(2, (char**)cmdLine);
     ASSERT_EQ(1, result);
 }
 
-TEST_F(MainTest, ExtractedFunctionReturnsOneWhenAnInvalidParameterIsPassed)
+TEST_F(MainImplTest, ExtractedFunctionReturnsOneWhenAnInvalidParameterIsPassed)
 {
     const char* cmdLine[] = { "APP_NAME", "--invalid" };
     int result = mainImpl(2, (char**)cmdLine);

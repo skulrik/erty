@@ -5,8 +5,23 @@
 #include "utils.h"
 #include <string>
 #include <boost/program_options.hpp>
+#include <boost/format.hpp>
 
 namespace po = boost::program_options;
+
+/**
+ * Exception thrown when an invalid option in pass to the application.
+ */
+class InvalidOptionException : public std::runtime_error
+{
+public:
+    /**
+     * Create a new InvalidOptionException with a specific message.
+     * @param message the exception message.
+     */
+    InvalidOptionException(const char* message) :
+        std::runtime_error((boost::format("InvalidOptionException: %1%") % message).str()) {}
+};
 
 /**
  * Class that manage all programs options.

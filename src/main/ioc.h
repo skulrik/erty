@@ -45,11 +45,33 @@ public:
     /**
      * Return an object pointer registred by its type name.
      * @tparam T The object type.
+     * @return the registered object.
      */
     template<class T>
     static T* Resolve()
     {
-        return ((T*)typeInstanceMap[typeid(T).name()]).get();
+        return (T*)(typeInstanceMap[typeid(T).name()].get());
+    }
+
+    /**
+     * Return true if an object is registered for a type.
+     * @tparam T The object type.
+     * @return true if an object is registered, else false.
+     */
+    template<class T>
+    static bool IsRegistered()
+    {
+        return (typeInstanceMap.find(typeid(T).name()) != typeInstanceMap.end());
+    }
+
+    /**
+     * Remove the registered object for a type.
+     * @tparam T The object type.
+     */
+    template<class T>
+    static void UnRegister()
+    {
+        Register<T>(0);
     }
 
 private:

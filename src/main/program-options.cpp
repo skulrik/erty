@@ -2,6 +2,7 @@
 #include "internationalization.h"
 
 #include <sstream>
+#include <exception>
 
 ProgramOptions::ProgramOptions(int argc, char** argv) :
     desc(_("Allowed options")), vm()
@@ -9,7 +10,14 @@ ProgramOptions::ProgramOptions(int argc, char** argv) :
     desc.add_options()
     ("help,h", _("Display this message"));
 
-    po::store(po::parse_command_line(argc, argv, desc), vm);
+    try
+    {
+        po::store(po::parse_command_line(argc, argv, desc), vm);
+    }
+    catch (std::exception e)
+    {
+        throw InvalidOptionException(e.what());
+    }
     po::notify(vm);
 }
 

@@ -33,6 +33,7 @@ public:
      * Create a new programs options manager class, by specifying command line arguments.
      * @param argc The number of command line arguments
      * @param argv The list of command line arguments.
+     * @throw InvalidOptionException
      */
     ProgramOptions(int argc, char** argv);
 

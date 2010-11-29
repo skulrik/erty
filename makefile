@@ -6,10 +6,10 @@ CXX=g++
 CXXFLAGS=-pedantic -Wall -Wextra -Werror -std=c++0x -D_FORTIFY_SOURCE=2
 
 CXXINCLUDES=-I. -I$(SRC_MAIN_DIR)
-CXXLIBS=-lboost_program_options
+CXXLIBS=-lboost_program_options -lboost_regex
 
-ifdef RELEASE
-  CXXFLAGS+= -s -O3
+ifdef OPTIMIZE
+    CXXFLAGS+= -s -O3
 endif
 
 ifdef DEBUG
@@ -127,8 +127,8 @@ astyle:
 
 valgrind: clean.build build build.test
 	mkdir -p $(REPORT_DIR)/valgrind
-	valgrind --xml=yes -v --leak-check=full --xml-file=$(REPORT_DIR)/valgrind/$(PROJECT_NAME).xml $(MAIN_EXEC_APP)
-	valgrind --xml=yes -v --leak-check=full --xml-file=$(REPORT_DIR)/valgrind/$(PROJECT_NAME)_TEST.xml $(TEST_EXEC_APP)
+	valgrind --xml=yes -v --leak-check=full --show-reachable=yes --xml-file=$(REPORT_DIR)/valgrind/$(PROJECT_NAME).xml $(MAIN_EXEC_APP)
+	valgrind --xml=yes -v --leak-check=full --show-reachable=yes --xml-file=$(REPORT_DIR)/valgrind/$(PROJECT_NAME)_TEST.xml $(TEST_EXEC_APP)
 	cp -f $(REPORT_TOOLS_DIR)/valgrind.xsl $(REPORT_DIR)/valgrind/
 	sed -i 's/<?xml version="1.0"?>/<?xml version="1.0"?>\n<?xml-stylesheet type="text\/xsl" href="valgrind.xsl"?>/' $(REPORT_DIR)/valgrind/$(PROJECT_NAME).xml
 	sed -i 's/<?xml version="1.0"?>/<?xml version="1.0"?>\n<?xml-stylesheet type="text\/xsl" href="valgrind.xsl"?>/' $(REPORT_DIR)/valgrind/$(PROJECT_NAME)_TEST.xml

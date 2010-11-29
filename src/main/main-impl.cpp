@@ -2,6 +2,7 @@
 #include "ioc.h"
 #include "internationalization.h"
 #include "program-options.h"
+#include "logger.h"
 
 #include <iostream>
 #include <exception>
@@ -31,7 +32,7 @@ int mainImpl(int argc, char** argv)
     }
     catch (std::exception& e)
     {
-        std::cout << e.what() << std::endl;
+        LOG_ERROR(e.what());
         return EXIT_FAILURE;
     }
 }

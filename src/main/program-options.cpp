@@ -14,7 +14,7 @@ ProgramOptions::ProgramOptions(int argc, char** argv) :
     {
         po::store(po::parse_command_line(argc, argv, desc), vm);
     }
-    catch (std::exception e)
+    catch (std::exception& e)
     {
         throw InvalidOptionException(e.what());
     }

@@ -1,0 +1,9 @@
+Dependencies
+-----------------------------------------
+- boost
+- lcov
+- gtest & gmock
+- valgring
+- cccc
+- ccm
+- doxygen

@@ -16,6 +16,6 @@ void demangle(const char* name, std::string& demangledName)
 #else
 void demangle(const char* name, std::string& demangledName)
 {
-    demangledname = name;
+    demangledName = name;
 }
 #endif

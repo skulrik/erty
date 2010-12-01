@@ -3,7 +3,7 @@ PROJECT_NAME=CPP_APP_TEMPLATE
 PREFIX=/usr/local/bin
 
 CXX=g++
-CXXFLAGS=-pedantic -Wall -Wextra -Werror -std=c++0x -D_FORTIFY_SOURCE=2
+CXXFLAGS=-pedantic -Wall -Wextra -Werror -std=c++0x -D_FORTIFY_SOURCE=2 -DHAVE_CXA_DEMANGLE
 
 CXXINCLUDES=-I. -I$(SRC_MAIN_DIR)
 CXXLIBS=-lboost_program_options -lboost_regex

@@ -3,15 +3,15 @@
 
 int main(int argc, char** argv)
 {
-    LOG_INFO("Startup");
+    LOG_INFO(void,"Startup");
     int result = mainImpl(argc, argv);;
     if (result == 0)
     {
-        LOG_INFO("Shutdown");
+        LOG_INFO(void,"Shutdown");
     }
     else
     {
-        LOG_ERROR("Failure");
+        LOG_ERROR(void,"Failure");
     }
     return result;
 }

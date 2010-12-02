@@ -31,7 +31,7 @@ protected:
 
     const std::string buildRegex(const char* level, const char* message)
     {
-        return (_F("\\[%1%\\] \\[\\d{4}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\] \\[LoggerTest\\] .*, \\d*: %2%\n") % level % message).str();
+        return (_F("\\[%1%\\] \\[\\d{4}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\] \\[LoggerTest\\] from .* in .* at line \\d*: %2%\n") % level % message).str();
     }
 
     std::streambuf *original;

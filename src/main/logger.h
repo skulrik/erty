@@ -32,10 +32,10 @@ struct Error
  * @param identifier the log identifier
  * @param message the message to log
  */
-#define LOG(level,identifier,message) Logger::Log<level,identifier>(__FILE__, __LINE__, message)
-#define LOG_DEBUG(identifier,message) Logger::Log<Debug,identifier>(__FILE__, __LINE__, message)
-#define LOG_INFO(identifier,message) Logger::Log<Info,identifier>(__FILE__, __LINE__, message)
-#define LOG_ERROR(identifier,message) Logger::Log<Error,identifier>(__FILE__, __LINE__, message)
+#define LOG(level,identifier,message) Logger::Log<level,identifier>(__FUNCTION__, __FILE__, __LINE__, message)
+#define LOG_DEBUG(identifier,message) Logger::Log<Debug,identifier>(__FUNCTION__, __FILE__, __LINE__, message)
+#define LOG_INFO(identifier,message) Logger::Log<Info,identifier>(__FUNCTION__, __FILE__, __LINE__, message)
+#define LOG_ERROR(identifier,message) Logger::Log<Error,identifier>(__FUNCTION__, __FILE__, __LINE__, message)
 
 /**
  * Class that log string of text to the console.
@@ -52,12 +52,12 @@ public:
      * @tparam Identifier the identifier of the log message
      */
     template <class LogLevel, class Identifier>
-    static void Log(const char* file, const int line, const char* message)
+    static void Log(const char* function, const char* file, const int line, const char* message)
     {
         std::string identifier;
         demangle(typeid(Identifier).name(), identifier);
 
-        Log(identifier.c_str(), file, line, message, LogLevel());
+        Log(identifier.c_str(), function, file, line, message, LogLevel());
     }
 
 private:
@@ -70,9 +70,9 @@ private:
      * @param level the level of the log message.
      */
     template <class LogLevel>
-    static void Log(const char* identifier, const char* file, const int line, const char* message, LogLevel level)
+    static void Log(const char* identifier, const char* function, const char* file, const int line, const char* message, LogLevel level)
     {
-        std::cout << "[" << level.level() << "] [" << DateTime::Now() << "] [" << identifier << "] " << file << ", " << line << ": " << message << std::endl;
+        std::cout << "[" << level.level() << "] [" << DateTime::Now() << "] [" << identifier << "] from " << function << " in " << file << " at line " << line << ": " << message << std::endl;
     }
 
     DISALLOW_DEFAULT_COPY_AND_ASSIGN(Logger);

@@ -4,8 +4,8 @@
 <xsl:template match="/">
   <html>
   <body>
-    <h2>Valgrind 3.3.1</h2>
-    <xsl:apply-templates/> 
+    <h2>Valgrind</h2>
+    <xsl:apply-templates/>
   </body>
   </html>
 </xsl:template>
@@ -37,12 +37,12 @@ Protocol Version: <span style="color:#ff0000">
 <xsl:template match="ppid">
  <table width="20%" border="0" cellpadding="2" cellspacing="2">
   <tr>
-    <td width="60%">PPID: </td>    
+    <td width="60%">PPID: </td>
     <td style="color:#0000ff" align="left">
        <xsl:value-of select="."/>
     </td>
   </tr>
- </table> 
+ </table>
 </xsl:template>
 
 <xsl:template match="tool">
@@ -53,7 +53,7 @@ Protocol Version: <span style="color:#ff0000">
       <xsl:value-of select="."/>
     </td>
   </tr>
- </table> 
+ </table>
 </xsl:template>
 
 <xsl:template match="args">
@@ -63,11 +63,11 @@ Protocol Version: <span style="color:#ff0000">
     <td width="80%"><span style="color:#0000ff"><xsl:value-of select="vargv/exe"/></span>
      <xsl:for-each select="vargv/arg">
        <span style="color:#0000ff"><xsl:value-of select="."/> </span>
-     </xsl:for-each>  
+     </xsl:for-each>
        <span style="color:#0000ff"><xsl:value-of select="argv/exe"/></span>
     </td>
   </tr>
- </table> 
+ </table>
 </xsl:template>
 
 <xsl:template match="status">
@@ -81,7 +81,7 @@ Protocol Version: <span style="color:#ff0000">
     <td width="20%">Time: </td>
     <td width="80%" style="color:#0000ff"><xsl:value-of select="time"/></td>
   </tr>
- </table> 
+ </table>
 </xsl:template>
 
 <xsl:template match="error">
@@ -127,8 +127,8 @@ Protocol Version: <span style="color:#ff0000">
       </td>
   </tr>
   </xsl:if>
- </table> 
- <xsl:apply-templates select="stack"/> 
+ </table>
+ <xsl:apply-templates select="stack"/>
  <xsl:apply-templates select="auxwhat"/>
 </xsl:template>
 

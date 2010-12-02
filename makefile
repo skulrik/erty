@@ -127,8 +127,8 @@ astyle:
 
 valgrind: clean.build build build.test
 	mkdir -p $(REPORT_DIR)/valgrind
-	valgrind --xml=yes -v --leak-check=full --show-reachable=yes --xml-file=$(REPORT_DIR)/valgrind/$(PROJECT_NAME).xml $(MAIN_EXEC_APP)
-	valgrind --xml=yes -v --leak-check=full --show-reachable=yes --xml-file=$(REPORT_DIR)/valgrind/$(PROJECT_NAME)_TEST.xml $(TEST_EXEC_APP)
+	valgrind --xml=yes -v --leak-check=full --show-reachable=no --leak-resolution=high --xml-file=$(REPORT_DIR)/valgrind/$(PROJECT_NAME).xml $(MAIN_EXEC_APP)
+	valgrind --xml=yes -v --leak-check=full --show-reachable=no --leak-resolution=high --xml-file=$(REPORT_DIR)/valgrind/$(PROJECT_NAME)_TEST.xml $(TEST_EXEC_APP)
 	cp -f $(REPORT_TOOLS_DIR)/valgrind.xsl $(REPORT_DIR)/valgrind/
 	sed -i 's/<?xml version="1.0"?>/<?xml version="1.0"?>\n<?xml-stylesheet type="text\/xsl" href="valgrind.xsl"?>/' $(REPORT_DIR)/valgrind/$(PROJECT_NAME).xml
 	sed -i 's/<?xml version="1.0"?>/<?xml version="1.0"?>\n<?xml-stylesheet type="text\/xsl" href="valgrind.xsl"?>/' $(REPORT_DIR)/valgrind/$(PROJECT_NAME)_TEST.xml

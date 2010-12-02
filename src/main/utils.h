@@ -19,4 +19,9 @@
        TypeName(const TypeName&) {};               \
        void operator=(const TypeName&) {}
 
+/**
+ * Define a shortcut for boost::format function.
+ */
+#define _F boost::format
+
 #endif

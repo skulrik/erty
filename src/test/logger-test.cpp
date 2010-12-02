@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "logger.h"
+#include "utils.h"
 
 #include <boost/regex.hpp>
 #include <boost/format.hpp>
@@ -30,7 +31,7 @@ protected:
 
     const std::string buildRegex(const char* level, const char* message)
     {
-        return (boost::format("\\[%1%\\] \\[\\d{4}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\] \\[LoggerTest\\] .*, \\d*: %2%\n") % level % message).str();
+        return (_F("\\[%1%\\] \\[\\d{4}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\] \\[LoggerTest\\] .*, \\d*: %2%\n") % level % message).str();
     }
 
     std::streambuf *original;

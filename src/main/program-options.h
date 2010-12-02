@@ -20,7 +20,7 @@ public:
      * @param message the exception message.
      */
     InvalidOptionException(const char* message) :
-        std::runtime_error((boost::format("InvalidOptionException: %1%") % message).str()) {}
+        std::runtime_error((_F("InvalidOptionException: %1%") % message).str()) {}
 };
 
 /**

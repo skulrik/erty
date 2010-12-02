@@ -21,7 +21,7 @@ public:
      * @param message the exception message.
      */
     IoCException(const char* message) :
-        std::runtime_error((boost::format("IoCException: %1%") % message).str()) {}
+        std::runtime_error((_F("IoCException: %1%") % message).str()) {}
 };
 
 /**

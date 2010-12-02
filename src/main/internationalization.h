@@ -11,7 +11,7 @@
 /**
  * Initialize the gettext libraries.
  * @param domainName The application domain registred in gettext.
- * @param dirname The directory where localization file are located.
+ * @param dirName The directory where localization file are located.
  */
 void internationalize(const char* domainName, const char* dirName);
 

@@ -1,8 +1,10 @@
 #include "main-impl.h"
-#include "logger.h"
+#include "logging.h"
 
 int main(int argc, char** argv)
 {
+    REGISTER_LOG(ConsoleLogger());
+
     LOG_INFO(void,"Startup");
     int result = mainImpl(argc, argv);;
     if (result == 0)

@@ -2,7 +2,7 @@
 #include "ioc.h"
 #include "internationalization.h"
 #include "program-options.h"
-#include "logger.h"
+#include "logging.h"
 
 #include <iostream>
 #include <exception>

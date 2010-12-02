@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "logger.h"
+#include "logging.h"
 #include "utils.h"
 
 #include <boost/regex.hpp>
@@ -38,6 +38,12 @@ protected:
     std::stringstream *stream;
 };
 
+TEST_F(LoggerTest, TestCannedLog)
+{
+    std::string log("[INFO ] [2010-Dec-02 10:45:40] [LoggerTest] from TestBody in src/test/logger-test.cpp at line 58: info\n");
+    const boost::regex e(buildRegex("INFO ", "info"));
+    ASSERT_TRUE(regex_match(log, e));
+}
 TEST_F(LoggerTest, TestLogDebug)
 {
     const boost::regex e(buildRegex("DEBUG", "debug"));

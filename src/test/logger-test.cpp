@@ -44,6 +44,7 @@ TEST_F(LoggerTest, TestCannedLog)
     const boost::regex e(buildRegex("INFO ", "info"));
     ASSERT_TRUE(regex_match(log, e));
 }
+
 TEST_F(LoggerTest, TestLogDebug)
 {
     const boost::regex e(buildRegex("DEBUG", "debug"));

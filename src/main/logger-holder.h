@@ -8,37 +8,11 @@
 #include <boost/foreach.hpp>
 
 #include "logger.h"
+#include "log-level.h"
 #include "datetime.h"
 #include "utils.h"
 #include "demangle.h"
 #include "ioc.h"
-
-/** Trigger a debug log message */
-struct Debug
-{
-    const char* level()
-    {
-        return "DEBUG";
-    }
-};
-
-/** Trigger an information log message */
-struct Info
-{
-    const char* level()
-    {
-        return "INFO ";
-    }
-};
-
-/** Trigger an error log message */
-struct Error
-{
-    const char* level()
-    {
-        return "ERROR";
-    }
-};
 
 /**
  * Macro to register a new Logger.

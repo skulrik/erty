@@ -1,6 +1,4 @@
 - Thread-Safe IoC singleton
-- IoC : static variable in h file.
 - Add licence in all files.
-- Add _ prefix to all private members variable.
 - Add file logger tests.
 

@@ -76,8 +76,6 @@ typedef std::list<LoggerItem> LoggerList;
  */
 class LoggerHolder
 {
-private:
-
 public:
 
     /**

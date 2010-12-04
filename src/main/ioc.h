@@ -39,7 +39,7 @@ public:
     template<class T>
     static void Register(T* objectPtr)
     {
-        typeInstanceMap[typeid(T).name()] = boost::shared_ptr<void>(objectPtr);
+        _typeInstanceMap[typeid(T).name()] = boost::shared_ptr<void>(objectPtr);
     }
 
     /**
@@ -50,7 +50,7 @@ public:
     template<class T>
     static T* Resolve()
     {
-        return (T*)(typeInstanceMap[typeid(T).name()].get());
+        return (T*)(_typeInstanceMap[typeid(T).name()].get());
     }
 
     /**
@@ -61,7 +61,7 @@ public:
     template<class T>
     static bool IsRegistered()
     {
-        return (typeInstanceMap.find(typeid(T).name()) != typeInstanceMap.end());
+        return (_typeInstanceMap.find(typeid(T).name()) != _typeInstanceMap.end());
     }
 
     /**
@@ -76,7 +76,7 @@ public:
 
 private:
     /** The map name->instance. */
-    static std::map<std::string, boost::shared_ptr<void> > typeInstanceMap;
+    static std::map<std::string, boost::shared_ptr<void> > _typeInstanceMap;
 
     DISALLOW_DEFAULT_COPY_AND_ASSIGN(IoC);
 };

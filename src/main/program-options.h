@@ -51,10 +51,10 @@ public:
 
 private:
     /** All the available options. */
-    po::options_description desc;
+    po::options_description _desc;
 
     /** All the defined options and their values. */
-    po::variables_map vm;
+    po::variables_map _vm;
 
     DISALLOW_DEFAULT_COPY_AND_ASSIGN(ProgramOptions);
 };

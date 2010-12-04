@@ -16,9 +16,10 @@
 
 /**
  * Macro to register a new Logger.
+ * @param level only log with level greather or equal to this will be logged in this logger.
  * @param logger the logger to register.
  */
-#define REGISTER_LOG(logger) LoggerHolder::Register(new logger)
+#define REGISTER_LOG(level,logger) LoggerHolder::Register(level(), new logger)
 
 /**
  * Macros that pass the source file name and line number to the Logger class.
@@ -31,28 +32,81 @@
 #define LOG_INFO(identifier,message) LoggerHolder::Log<Info,identifier>(__FUNCTION__, __FILE__, __LINE__, message)
 #define LOG_ERROR(identifier,message) LoggerHolder::Log<Error,identifier>(__FUNCTION__, __FILE__, __LINE__, message)
 
+
+/** Each logger are stored as a boost shared ptr in the LoggerItem struct. */
+typedef boost::shared_ptr<Logger> LoggerPtr;
+
+/** Represent one available logger. */
+struct LoggerItem
+{
+    /** Only log with level greather or equal to this will be logged in this logger. */
+    unsigned int priority;
+
+    /** The logger in which will be write log messages. */
+    LoggerPtr logger;
+
+    /**
+     * Instanciate a new LoggerItem.
+     * @param priority only log with level greather or equal to this will be logged in this logger.
+     * @param logger the logger in which will be write log messages.
+     */
+    LoggerItem(int priority, Logger* logger) :
+        priority(priority), logger(LoggerPtr(logger))
+    {
+    }
+};
+
+/**
+ * Compare two LoggerItem for equality.
+ * @param a the first LoggerItem.
+ * @param b the second LoggerItem.
+ * @return true if both LoggerItem contains the same logger.
+ */
+inline bool operator==(const LoggerItem& a, const LoggerItem& b)
+{
+    return (*(a.logger) == *(b.logger));
+}
+
+/** Type for the list of all loggers. */
+typedef std::list<LoggerItem> LoggerList;
+
+
 /**
  * Class that log string of text to the console.
  */
 class LoggerHolder
 {
 private:
-    /** Each logger are stored as a boost shared ptr in the list. */
-    typedef boost::shared_ptr<Logger> LoggerPtr;
-
-    /** Type for the list of all loggers. */
-    typedef std::list<LoggerPtr> LoggerList;
 
 public:
 
     /**
      * Register a new logger.
+     * If the logger is already registered, its priority will be adjuted to match the requested one.
+     * @param level only log with level greather or equal to this will be logged in this logger.
      * @param logger the logger to register.
      */
-    static void Register(Logger* logger)
+    template <class LogLevel>
+    static void Register(LogLevel level, Logger* logger)
     {
         LoggerList* loggers = GetLoggers();
-        loggers->push_back(LoggerPtr(logger));
+        LoggerItem loggerItem(level.priority(), logger);
+
+        LoggerList::iterator logItemIter = std::find(loggers->begin(), loggers->end(), loggerItem);
+        if (logItemIter == loggers->end())
+        {
+            loggers->push_back(loggerItem);
+        }
+        else
+        {
+            logItemIter->priority = level.priority();
+        }
+    }
+
+    static void UnregisterAll()
+    {
+        LoggerList* loggers = GetLoggers();
+        loggers->clear();
     }
 
     /**
@@ -90,9 +144,12 @@ private:
         ss << "[" << level.level() << "] [" << DateTime::Now() << "] [" << identifier << "] from " << function << " in " << file << " at line " << line << ": " << message << std::endl;
 
         LoggerList* loggers = GetLoggers();
-        BOOST_FOREACH(LoggerPtr& logger, *loggers)
+        BOOST_FOREACH(LoggerItem& loggerItem, *loggers)
         {
-            logger->write(ss.str());
+            if (level.priority() >= loggerItem.priority)
+            {
+                loggerItem.logger->write(ss.str());
+            }
         }
 
     }

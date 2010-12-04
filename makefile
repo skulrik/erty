@@ -64,7 +64,7 @@ report: clean init
 	make ccm
 
 clean:	clean.build
-	rm -rf $(REPORT_DIR) $(TAGS_FILE) $(CSCOPE_FILES) $(LOCALES_DIR)/mo
+	rm -rf $(REPORT_DIR) $(TAGS_FILE) $(CSCOPE_FILES) $(LOCALES_DIR)/mo *.log
 
 clean.build:
 	rm -rf $(BUILD_DIR) $(BIN_DIR)

@@ -1,9 +1,10 @@
 #pragma once
-#ifndef _CONSOLE_LOGGER_H_
-#define _CONSOLE_LOGGER_H_
+#ifndef _FILE_LOGGER_H_
+#define _FILE_LOGGER_H_
 
 #include <string>
-#include <iostream>
+#include <fstream>
+#include <sstream>
 #include "logger.h"
 
 /**
@@ -16,25 +17,35 @@ public:
      * Instanciate a new FileLogger.
      * @param fileName the file name of the file to ouput message into it.
      */
-    LoggerFile(const char* fileName)
+    FileLogger(const char* fileName)
     {
-        file.open(fileName, std::ios::app);
-        file.seekp(std::ios::beg);
+        std::stringstream ss;
+        ss << typeid(*this).name() << "::" << fileName;
+        uuid(ss.str());
+
+        _file.open(fileName, std::ios::app);
+        _file.seekp(std::ios::beg);
     }
 
-    virtual ~LoggerFile()
+    virtual ~FileLogger()
     {
-        file.close();
+        _file.close();
     }
 
+    /**
+     * Write a message in the file..
+     * @param message the message to log.
+     */
     virtual void write(const std::string& message)
     {
-        file << messsage;
-        file.flush();
+        _file << message;
+        _file.flush();
     }
 
 private:
-    std::ofstream file;
+
+    /** The file in which message are log. */
+    std::ofstream _file;
 };
 
 #endif

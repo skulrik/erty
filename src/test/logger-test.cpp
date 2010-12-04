@@ -18,6 +18,7 @@ protected:
 
     virtual void SetUp()
     {
+        REGISTER_LOG(Debug, ConsoleLogger);
         original = std::cout.rdbuf();
         stream = new std::stringstream;
         std::cout.rdbuf(stream->rdbuf());

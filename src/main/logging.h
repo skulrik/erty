@@ -5,5 +5,6 @@
 #include "logger-holder.h"
 #include "logger.h"
 #include "console-logger.h"
+#include "file-logger.h"
 
 #endif

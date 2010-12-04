@@ -12,6 +12,18 @@
 class ConsoleLogger : public Logger
 {
 public:
+    /**
+     * Instanciate a new logger that will log to the console.
+     */
+    ConsoleLogger()
+    {
+        uuid(typeid(*this).name());
+    }
+
+    /**
+     * Write a message to the console.
+     * @param message the message to log.
+     */
     virtual void write(const std::string& message)
     {
         std::cout << message;

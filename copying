@@ -18,6 +18,3 @@
     along with CPP_APP_TEMPLATE.  If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 */
-#include "ioc.h"
-
-std::map<std::string, boost::shared_ptr<void> > IoC::_typeInstanceMap;

@@ -117,7 +117,7 @@ test:	build.test
 	sed -i 's/<?xml version="1.0" encoding="UTF-8"?>/<?xml version="1.0" encoding="UTF-8"?>\n<?xml-stylesheet type="text\/xsl" href="gtest.xsl"?>/' $(REPORT_DIR)/test/$(PROJECT_NAME)_TEST.xml
 
 prod: clean
-	make "RELEASE=1" build
+	make "OPTIMIZE=1" build
 	make msgfmt
 
 install:

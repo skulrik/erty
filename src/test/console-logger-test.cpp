@@ -29,11 +29,8 @@ class ConsoleLoggerTest : public ::testing::Test
 {
 protected:
 
-    static void SetUpTestCase() {
-        UNREGISTER_ALL_LOGS();
-    }
-
-    static void TearDownTestCase() {
+    static void TearDownTestCase()
+    {
         UNREGISTER_ALL_LOGS();
     }
 

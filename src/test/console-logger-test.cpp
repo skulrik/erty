@@ -61,7 +61,7 @@ protected:
 
     const std::string buildRegex(const char* level, const char* message)
     {
-        return (_F("\\[%1%\\] \\[\\d{4}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\] \\[ConsoleLoggerTest\\] from .* in .* at line \\d*: %2%\n") % level % message).str();
+        return (_F("\\[%1%\\] \\[\\d{4}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\] \\[ConsoleLoggerTest\\] from .* in .*:\\d* - %2%\n") % level % message).str();
     }
 
     std::streambuf *original;
@@ -70,7 +70,7 @@ protected:
 
 TEST_F(ConsoleLoggerTest, TestCannedLog)
 {
-    std::string log("[INFO ] [2010-Dec-02 10:45:40] [ConsoleLoggerTest] from TestBody in src/test/logger-test.cpp at line 58: TestCannedLog\n");
+    std::string log("[INFO ] [2010-Dec-02 10:45:40] [ConsoleLoggerTest] from TestBody in src/test/logger-test.cpp:58 - TestCannedLog\n");
     const boost::regex e(buildRegex("INFO ", "TestCannedLog"));
     ASSERT_TRUE(regex_match(log, e));
 }

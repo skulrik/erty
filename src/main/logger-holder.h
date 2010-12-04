@@ -163,7 +163,7 @@ private:
     static void Log(const char* identifier, const char* function, const char* file, const int line, const char* message, LogLevel level)
     {
         std::stringstream ss;
-        ss << "[" << level.level() << "] [" << DateTime::Now() << "] [" << identifier << "] from " << function << " in " << file << " at line " << line << ": " << message << std::endl;
+        ss << "[" << level.level() << "] [" << DateTime::Now() << "] [" << identifier << "] from " << function << " in " << file << ":" << line << " - " << message << std::endl;
 
         LoggerList* loggers = GetLoggers();
         BOOST_FOREACH(LoggerItem& loggerItem, *loggers)

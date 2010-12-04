@@ -41,6 +41,7 @@
  */
 #define REGISTER_LOG(level,logger) LoggerHolder::Register(level(), new logger)
 
+#define UNREGISTER_ALL_LOGS() LoggerHolder::UnregisterAll()
 /**
  * Macros that pass the source file name and line number to the Logger class.
  * @param level the level of the log message
@@ -121,6 +122,9 @@ public:
         }
     }
 
+    /**
+     * Unregister all registered loggers.
+     */
     static void UnregisterAll()
     {
         LoggerList* loggers = GetLoggers();

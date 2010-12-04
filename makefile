@@ -33,6 +33,8 @@ RESOURCES_DIR=resources
 REPORT_TOOLS_DIR=$(RESOURCES_DIR)/report-tools
 LOCALES_DIR=$(RESOURCES_DIR)/LC_MESSAGES
 
+TEST_OUTPUT_DIR=test-output
+
 REPORT_DIR=report
 
 BIN_DIR=bin
@@ -64,7 +66,7 @@ report: clean init
 	make ccm
 
 clean:	clean.build
-	rm -rf $(REPORT_DIR) $(TAGS_FILE) $(CSCOPE_FILES) $(LOCALES_DIR)/mo *.log
+	rm -rf $(TEST_OUTPUT_DIR) $(REPORT_DIR) $(TAGS_FILE) $(CSCOPE_FILES) $(LOCALES_DIR)/mo *.log
 
 clean.build:
 	rm -rf $(BUILD_DIR) $(BIN_DIR)
@@ -108,6 +110,7 @@ link.test:
 	$(CXX) $(TEST_OBJECTS) $(CXXLIBS) -L/usr/local/lib -lpthread -lgtest -lgmock -o $(TEST_EXEC_APP)
 
 test:	build.test
+	mkdir -p $(TEST_OUTPUT_DIR)
 	mkdir -p $(REPORT_DIR)/test
 	$(TEST_EXEC_APP) --gtest_shuffle --gtest_output=xml:$(REPORT_DIR)/test/$(PROJECT_NAME)_TEST.xml
 	cp -f $(REPORT_TOOLS_DIR)/gtest.xsl $(REPORT_DIR)/test/

@@ -143,9 +143,7 @@ public:
     template <class LogLevel, class Identifier>
     static void Log(const char* function, const char* file, const int line, const char* message)
     {
-        std::string identifier;
-        demangle(typeid(Identifier).name(), identifier);
-
+        std::string identifier = demangle(typeid(Identifier).name());
         Log(identifier.c_str(), function, file, line, message, LogLevel());
     }
 

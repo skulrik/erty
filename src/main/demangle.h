@@ -28,8 +28,8 @@
  * Return the demangled version of an identifier.
  * Must be build with the HAVE_CXA_DEMANGLE option.
  * @param name the name to demangle.
- * @param demangledName the demangled version of the name is returnedis this parameter.
+ * @return the demangled version of the name is returnedis this parameter.
  */
-void demangle(const char* name, std::string& demangledName);
+std::string demangle(const char* name);
 
 #endif

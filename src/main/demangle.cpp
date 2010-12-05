@@ -22,7 +22,7 @@
 #include <cxxabi.h>
 
 #ifdef HAVE_CXA_DEMANGLE
-void demangle(const char* name, std::string& demangledName)
+std::string demangle(const char* name)
 {
     char buf[1024];
     size_t size=sizeof(buf);
@@ -31,11 +31,11 @@ void demangle(const char* name, std::string& demangledName)
                          buf,
                          &size,
                          &status);
-    demangledName = buf;
+    return std::string(buf);
 }
 #else
-void demangle(const char* name, std::string& demangledName)
+std::stringoid demangle(const char* name)
 {
-    demangledName = name;
+    return std::string(name);
 }
 #endif

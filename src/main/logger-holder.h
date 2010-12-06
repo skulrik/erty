@@ -45,13 +45,13 @@
 /**
  * Macros that pass the source file name and line number to the Logger class.
  * @param level the level of the log message
- * @param identifier the log identifier
+ * @param component the log component
  * @param message the message to log
  */
-#define LOG(level,identifier,message) LoggerHolder::Log<level,identifier>(__FUNCTION__, __FILE__, __LINE__, message)
-#define LOG_DEBUG(identifier,message) LoggerHolder::Log<Debug,identifier>(__FUNCTION__, __FILE__, __LINE__, message)
-#define LOG_INFO(identifier,message) LoggerHolder::Log<Info,identifier>(__FUNCTION__, __FILE__, __LINE__, message)
-#define LOG_ERROR(identifier,message) LoggerHolder::Log<Error,identifier>(__FUNCTION__, __FILE__, __LINE__, message)
+#define LOG(level,component,message) LoggerHolder::Log<level,component>(__FUNCTION__, __FILE__, __LINE__, message)
+#define LOG_DEBUG(component,message) LoggerHolder::Log<Debug,component>(__FUNCTION__, __FILE__, __LINE__, message)
+#define LOG_INFO(component,message) LoggerHolder::Log<Info,component>(__FUNCTION__, __FILE__, __LINE__, message)
+#define LOG_ERROR(component,message) LoggerHolder::Log<Error,component>(__FUNCTION__, __FILE__, __LINE__, message)
 
 
 /** Each logger are stored as a boost shared ptr in the LoggerItem struct. */
@@ -138,19 +138,19 @@ public:
      * @param line line in which the log call was triggered.
      * @param message the message to log.
      * @tparam LogLevel the level of the log message
-     * @tparam Identifier the identifier of the log message
+     * @tparam component the component of the log message
      */
-    template <class LogLevel, class Identifier>
+    template <class LogLevel, class Component>
     static void Log(const char* function, const char* file, const int line, const char* message)
     {
-        std::string identifier = demangle(typeid(Identifier).name());
-        Log(identifier.c_str(), function, file, line, message, LogLevel());
+        std::string component = demangle(typeid(Component).name());
+        Log(component.c_str(), function, file, line, message, LogLevel());
     }
 
 private:
     /**
      * Log method dispatcher by Loglevel.
-     * @param identifier the identifier of the log message
+     * @param component the component of the log message
      * @param function function name in which the log call was triggered.
      * @param file file name in which the log call was triggered.
      * @param line line in which the log call was triggered.
@@ -158,10 +158,10 @@ private:
      * @param level the level of the log message.
      */
     template <class LogLevel>
-    static void Log(const char* identifier, const char* function, const char* file, const int line, const char* message, LogLevel level)
+    static void Log(const char* component, const char* function, const char* file, const int line, const char* message, LogLevel level)
     {
         std::stringstream ss;
-        ss << "[" << level.level() << "] [" << DateTime::Now() << "] [" << identifier << "] from " << function << " in " << file << ":" << line << " - " << message << std::endl;
+        ss << "[" << level.level() << "] [" << DateTime::Now() << "] [" << component << "] from " << function << " in " << file << ":" << line << " - " << message << std::endl;
 
         LoggerList* loggers = GetLoggers();
         BOOST_FOREACH(LoggerItem& loggerItem, *loggers)

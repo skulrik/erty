@@ -1,4 +1,3 @@
 - Thread-Safe IoC singleton.
-- Logging : rename identifier to component.
 - Logging : associate logging level to component instead of logger.
 - Add a Registry class.

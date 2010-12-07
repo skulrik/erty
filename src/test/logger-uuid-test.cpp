@@ -29,15 +29,19 @@ TEST(LoggerUuidTest, TestThatTwoConsoleLoggerAreEquals)
 TEST(LoggerUuidTest, TestThatAConsoleLoggerIsDifferentThanAFileLogger)
 {
     ASSERT_FALSE(ConsoleLogger() == FileLogger("output.log"));
+    std::remove("output.log");
 }
 
 TEST(LoggerUuidTest, TestThatTwoFileLoggerAreEqualsIfTheBelongToTheSameFile)
 {
     ASSERT_TRUE(FileLogger("output.log") ==FileLogger("output.log"));
+    std::remove("output.log");
 }
 
 TEST(LoggerUuidTest, TestThatTwoFileLoggerAreDifferentIfTheBelongToDifferentFile)
 {
     ASSERT_FALSE(FileLogger("output-1.log") == FileLogger("output-2.log"));
+    std::remove("output-1.log");
+    std::remove("output-2.log");
 }
 

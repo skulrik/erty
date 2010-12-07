@@ -20,20 +20,18 @@
 */
 #include "gtest/gtest.h"
 #include "logging.h"
-#include "utils.h"
-
-#include <boost/regex.hpp>
-#include <boost/format.hpp>
 
 class LogLevelTest : public ::testing::Test
 {
 protected:
     LogLevelTest()
     {
+        REGISTER_LOGGER(ConsoleLogger);
     }
 
     virtual ~LogLevelTest()
     {
+        UNREGISTER_ALL_LOGGERS();
     }
 
     virtual void SetUp()
@@ -55,43 +53,64 @@ protected:
 
 TEST_F(LogLevelTest, TestErrorLogAppearsWhenLoggerPrioriryIsError)
 {
-    REGISTER_LOG(Error, ConsoleLogger);
-    LOG(Error, LogLevelTest, "error");
+    REGISTER_LOG_COMPONENT(__CLASS__, Error);
+    LOG_ERROR(__CLASS__, "error");
     ASSERT_TRUE(stream->str().size() > 0);
 }
 
 TEST_F(LogLevelTest, TestErrorLogAppearsWhenLoggerPrioriryIsInfo)
 {
-    REGISTER_LOG(Info, ConsoleLogger);
-    LOG(Error, LogLevelTest, "error");
+    REGISTER_LOG_COMPONENT(__CLASS__, Info);
+    LOG_ERROR(__CLASS__, "error");
     ASSERT_TRUE(stream->str().size() > 0);
 }
 
 TEST_F(LogLevelTest, TestErrorLogAppearsWhenLoggerPrioriryIsDebug)
 {
-    REGISTER_LOG(Debug, ConsoleLogger);
-    LOG(Error, LogLevelTest, "error");
+    REGISTER_LOG_COMPONENT(__CLASS__, Debug);
+    LOG_ERROR(__CLASS__, "error");
     ASSERT_TRUE(stream->str().size() > 0);
 }
 
 TEST_F(LogLevelTest, TestInfoLogDontAppearsWhenLoggerPrioriryIsError)
 {
-    REGISTER_LOG(Error, ConsoleLogger);
-    LOG(Info, LogLevelTest, "info");
+    REGISTER_LOG_COMPONENT(__CLASS__, Error);
+    LOG_INFO(__CLASS__, "info");
     ASSERT_TRUE(stream->str().size() == 0);
 }
 
 TEST_F(LogLevelTest, TestInfoLogAppearsWhenLoggerPrioriryIsInfo)
 {
-    REGISTER_LOG(Info, ConsoleLogger);
-    LOG(Info, LogLevelTest, "info");
+    REGISTER_LOG_COMPONENT(__CLASS__, Info);
+    LOG_INFO(__CLASS__, "info");
     ASSERT_TRUE(stream->str().size() > 0);
 }
 
 TEST_F(LogLevelTest, TestInfoLogAppearsWhenLoggerPrioriryIsDebug)
 {
-    REGISTER_LOG(Debug, ConsoleLogger);
-    LOG(Info, LogLevelTest, "info");
+    REGISTER_LOG_COMPONENT(__CLASS__, Debug);
+    LOG_INFO(__CLASS__, "info");
+    ASSERT_TRUE(stream->str().size() > 0);
+}
+
+TEST_F(LogLevelTest, TestDebugLogDontAppearsWhenLoggerPrioriryIsError)
+{
+    REGISTER_LOG_COMPONENT(__CLASS__, Error);
+    LOG_DEBUG(__CLASS__, "debug");
+    ASSERT_TRUE(stream->str().size() == 0);
+}
+
+TEST_F(LogLevelTest, TestDebugLogDontAppearsWhenLoggerPrioriryIsInfo)
+{
+    REGISTER_LOG_COMPONENT(__CLASS__, Info);
+    LOG_DEBUG(__CLASS__, "debug");
+    ASSERT_TRUE(stream->str().size() == 0);
+}
+
+TEST_F(LogLevelTest, TestDebugLogAppearsWhenLoggerPrioriryIsDebug)
+{
+    REGISTER_LOG_COMPONENT(__CLASS__, Debug);
+    LOG_DEBUG(__CLASS__, "debug");
     ASSERT_TRUE(stream->str().size() > 0);
 }
 

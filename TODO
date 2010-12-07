@@ -1,3 +1,4 @@
 - Thread-Safe IoC singleton.
-- Logging : associate logging level to component instead of logger.
+- Logging : add missing standard log level (Emergency, Alert, Critical, Warning, Notice)
+- Logging : implement a syslog logger.
 - Add a Registry class.

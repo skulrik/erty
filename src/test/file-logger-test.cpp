@@ -25,6 +25,7 @@
 #include <boost/regex.hpp>
 #include <boost/format.hpp>
 
+#define LOG_COMPONENT "FileLoggerTest"
 #define TEST_OUTPUT_FILE_NAME "test-output/file-logger-test.log"
 
 class FileLoggerTest : public ::testing::Test
@@ -41,12 +42,13 @@ protected:
 
     virtual void SetUp()
     {
-        REGISTER_LOG(Debug, FileLogger(TEST_OUTPUT_FILE_NAME));
+        REGISTER_LOGGER(FileLogger(TEST_OUTPUT_FILE_NAME));
+        REGISTER_LOG_COMPONENT(LOG_COMPONENT, Debug);
     }
 
     virtual void TearDown()
     {
-        UNREGISTER_ALL_LOGS();
+        UNREGISTER_ALL_LOGGERS();
         std::remove(TEST_OUTPUT_FILE_NAME);
     }
 
@@ -81,50 +83,21 @@ TEST_F(FileLoggerTest, TestCannedLog)
 TEST_F(FileLoggerTest, TestLogDebug)
 {
     const boost::regex e(buildRegex("DEBUG", __FUNCTION__));
-    LOG(Debug, FileLoggerTest, __FUNCTION__);
-    ASSERT_TRUE(regex_match(readResultFile(), e));
-}
-
-TEST_F(FileLoggerTest, TestLogDebugWithMacro)
-{
-    const boost::regex e(buildRegex("DEBUG", __FUNCTION__));
-    LOG_DEBUG(FileLoggerTest, __FUNCTION__);
+    LOG_DEBUG(LOG_COMPONENT, __FUNCTION__);
     ASSERT_TRUE(regex_match(readResultFile(), e));
 }
 
 TEST_F(FileLoggerTest, TestLogInfo)
 {
     const boost::regex e(buildRegex("INFO ", __FUNCTION__));
-    LOG(Info, FileLoggerTest, __FUNCTION__);
-    ASSERT_TRUE(regex_match(readResultFile(), e));
-}
-
-TEST_F(FileLoggerTest, TestLogInfoWithMacro)
-{
-    const boost::regex e(buildRegex("INFO ", __FUNCTION__));
-    LOG_INFO(FileLoggerTest, __FUNCTION__);
+    LOG_INFO(LOG_COMPONENT, __FUNCTION__);
     ASSERT_TRUE(regex_match(readResultFile(), e));
 }
 
 TEST_F(FileLoggerTest, TestLogError)
 {
     const boost::regex e(buildRegex("ERROR", __FUNCTION__));
-    LOG(Error, FileLoggerTest, __FUNCTION__);
-    ASSERT_TRUE(regex_match(readResultFile(), e));
-}
-
-TEST_F(FileLoggerTest, TestLogErrorWithMacro)
-{
-    const boost::regex e(buildRegex("ERROR", __FUNCTION__));
-    LOG_ERROR(FileLoggerTest, __FUNCTION__);
-    ASSERT_TRUE(regex_match(readResultFile(), e));
-}
-
-TEST_F(FileLoggerTest, TestLogWithDefine)
-{
-#define LOG_LEVEL Info
-    const boost::regex e(buildRegex("INFO ", __FUNCTION__));
-    LOG(LOG_LEVEL, FileLoggerTest, __FUNCTION__);
+    LOG_ERROR(LOG_COMPONENT, __FUNCTION__);
     ASSERT_TRUE(regex_match(readResultFile(), e));
 }
 

@@ -44,4 +44,8 @@
  */
 #define _F boost::format
 
+/**
+ * Define a shorcut macro to get the current object class name.
+ */
+#define __CLASS__ demangle(typeid(*this).name()).c_str()
 #endif

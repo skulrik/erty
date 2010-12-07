@@ -23,17 +23,17 @@
 
 int main(int argc, char** argv)
 {
-    REGISTER_LOG(Debug,ConsoleLogger);
+    REGISTER_LOGGER(ConsoleLogger);
 
-    LOG_INFO(void,"Startup");
+    LOG_INFO(LOG_MAIN_COMPONENT,"Startup");
     int result = mainImpl(argc, argv);;
     if (result == 0)
     {
-        LOG_INFO(void,"Shutdown");
+        LOG_INFO(LOG_MAIN_COMPONENT,"Shutdown");
     }
     else
     {
-        LOG_ERROR(void,"Failure");
+        LOG_ERROR(LOG_MAIN_COMPONENT,"Failure");
     }
     return result;
 }

@@ -22,9 +22,10 @@
 #ifndef _MAIN_IMPL_H_
 #define _MAIN_IMPL_H_
 
-/**
- * Main application method.
- */
+/** Define the mail application logging component. */
+#define LOG_MAIN_COMPONENT "main"
+
+/** Main application method. */
 int mainImpl(int argc, char** argv);
 
 #endif

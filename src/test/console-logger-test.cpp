@@ -25,13 +25,15 @@
 #include <boost/regex.hpp>
 #include <boost/format.hpp>
 
+#define LOG_COMPONENT "ConsoleLoggerTest"
+
 class ConsoleLoggerTest : public ::testing::Test
 {
 protected:
 
     static void TearDownTestCase()
     {
-        UNREGISTER_ALL_LOGS();
+        UNREGISTER_ALL_LOGGERS();
     }
 
     ConsoleLoggerTest()
@@ -44,7 +46,8 @@ protected:
 
     virtual void SetUp()
     {
-        REGISTER_LOG(Debug, ConsoleLogger);
+        REGISTER_LOGGER(ConsoleLogger);
+        REGISTER_LOG_COMPONENT(LOG_COMPONENT, Debug);
         original = std::cout.rdbuf();
         stream = new std::stringstream;
         std::cout.rdbuf(stream->rdbuf());
@@ -75,50 +78,21 @@ TEST_F(ConsoleLoggerTest, TestCannedLog)
 TEST_F(ConsoleLoggerTest, TestLogDebug)
 {
     const boost::regex e(buildRegex("DEBUG", __FUNCTION__));
-    LOG(Debug, ConsoleLoggerTest, __FUNCTION__);
-    ASSERT_TRUE(regex_match(stream->str(), e));
-}
-
-TEST_F(ConsoleLoggerTest, TestLogDebugWithMacro)
-{
-    const boost::regex e(buildRegex("DEBUG", __FUNCTION__));
-    LOG_DEBUG(ConsoleLoggerTest, __FUNCTION__);
+    LOG_DEBUG(LOG_COMPONENT, __FUNCTION__);
     ASSERT_TRUE(regex_match(stream->str(), e));
 }
 
 TEST_F(ConsoleLoggerTest, TestLogInfo)
 {
     const boost::regex e(buildRegex("INFO ", __FUNCTION__));
-    LOG(Info, ConsoleLoggerTest, __FUNCTION__);
-    ASSERT_TRUE(regex_match(stream->str(), e));
-}
-
-TEST_F(ConsoleLoggerTest, TestLogInfoWithMacro)
-{
-    const boost::regex e(buildRegex("INFO ", __FUNCTION__));
-    LOG_INFO(ConsoleLoggerTest, __FUNCTION__);
+    LOG_INFO(LOG_COMPONENT, __FUNCTION__);
     ASSERT_TRUE(regex_match(stream->str(), e));
 }
 
 TEST_F(ConsoleLoggerTest, TestLogError)
 {
     const boost::regex e(buildRegex("ERROR", __FUNCTION__));
-    LOG(Error, ConsoleLoggerTest, __FUNCTION__);
-    ASSERT_TRUE(regex_match(stream->str(), e));
-}
-
-TEST_F(ConsoleLoggerTest, TestLogErrorWithMacro)
-{
-    const boost::regex e(buildRegex("ERROR", __FUNCTION__));
-    LOG_ERROR(ConsoleLoggerTest, __FUNCTION__);
-    ASSERT_TRUE(regex_match(stream->str(), e));
-}
-
-TEST_F(ConsoleLoggerTest, TestLogWithDefine)
-{
-#define LOG_LEVEL Info
-    const boost::regex e(buildRegex("INFO ", __FUNCTION__));
-    LOG(LOG_LEVEL, ConsoleLoggerTest, __FUNCTION__);
+    LOG_ERROR(LOG_COMPONENT, __FUNCTION__);
     ASSERT_TRUE(regex_match(stream->str(), e));
 }
 

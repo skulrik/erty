@@ -142,8 +142,9 @@ public:
      * Register a new logger.
      * If the logger is already registered, its priority will be adjuted to match the requested one.
      * @param logger the logger to register.
+     * @return the registered logger.
      */
-    static void RegisterLogger(Logger* logger)
+    static Logger* RegisterLogger(Logger* logger)
     {
         LoggerHolder& holder = GetLoggerHolder();
         LoggerPtr loggerPtr = LoggerPtr(logger);
@@ -153,6 +154,7 @@ public:
         {
             holder._loggerList.push_back(loggerPtr);
         }
+        return logger;
     }
 
     /**

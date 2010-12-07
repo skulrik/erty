@@ -1,3 +1,2 @@
 - Thread-Safe IoC singleton.
-- Logging : mock the syslog logger in test.
-- Add a Registry class.
+- Logging : register logger from a configuration file.

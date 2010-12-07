@@ -19,6 +19,7 @@
 ===============================================================================
 */
 #include "gtest/gtest.h"
+#include "gmock/gmock.h"
 #include "logging.h"
 #include "utils.h"
 
@@ -27,14 +28,19 @@
 
 #define LOG_COMPONENT "SyslogLoggerTest"
 
+using ::testing::_;
+using ::testing::Return;
+
+class SyslogLoggerMock : public SyslogLogger
+{
+public:
+    MOCK_METHOD0(uuid, const std::string());
+    MOCK_METHOD2(write, void(const LogLevel& level, const std::string& message));
+};
+
 class SyslogLoggerTest : public ::testing::Test
 {
 protected:
-
-    static void TearDownTestCase()
-    {
-        UNREGISTER_ALL_LOGGERS();
-    }
 
     SyslogLoggerTest()
     {
@@ -46,74 +52,68 @@ protected:
 
     virtual void SetUp()
     {
-        REGISTER_LOGGER(SyslogLogger);
         REGISTER_LOG_COMPONENT(LOG_COMPONENT, Debug);
+        EXPECT_CALL(*loggerMock, uuid()).WillRepeatedly(Return(std::string(LOG_COMPONENT)));
+        loggerMock = static_cast<SyslogLoggerMock*>(REGISTER_LOGGER(SyslogLoggerMock));
     }
 
     virtual void TearDown()
     {
+        UNREGISTER_ALL_LOGGERS();
     }
 
-    const std::string buildRegex(const char* level, const char* message)
-    {
-        return (_F("\\[%1%\\] \\[\\d{4}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\] \\[SyslogLoggerTest\\] from .* in .*:\\d* - %2%\n") % level % message).str();
-    }
+    SyslogLoggerMock* loggerMock;
 };
-
-TEST_F(SyslogLoggerTest, TestCannedLog)
-{
-    std::string log("[INFO] [2010-Dec-02 10:45:40] [SyslogLoggerTest] from TestBody in src/test/logger-test.cpp:58 - TestCannedLog\n");
-    const boost::regex e(buildRegex("INFO", "TestCannedLog"));
-    ASSERT_TRUE(regex_match(log, e));
-}
 
 TEST_F(SyslogLoggerTest, TestLogDebug)
 {
-    const boost::regex e(buildRegex("DEBUG", __FUNCTION__));
-    DEBUG_LOG(LOG_COMPONENT, __FUNCTION__);
 #ifdef DEBUG
+    EXPECT_CALL(*loggerMock, write(_, _)).Times(1);
+#else
+    EXPECT_CALL(*loggerMock, write(_, _)).Times(0);
 #endif
+    DEBUG_LOG(LOG_COMPONENT, __FUNCTION__);
 }
 
 TEST_F(SyslogLoggerTest, TestLogInfo)
 {
-    const boost::regex e(buildRegex("INFO", __FUNCTION__));
+    EXPECT_CALL(*loggerMock, write(_, _)).Times(1);
     INFO_LOG(LOG_COMPONENT, __FUNCTION__);
 }
 
 TEST_F(SyslogLoggerTest, TestLogNotice)
 {
-    const boost::regex e(buildRegex("NOTICE", __FUNCTION__));
+    EXPECT_CALL(*loggerMock, write(_, _)).Times(1);
     NOTICE_LOG(LOG_COMPONENT, __FUNCTION__);
 }
 
 TEST_F(SyslogLoggerTest, TestLogWarning)
 {
-    const boost::regex e(buildRegex("WARNING", __FUNCTION__));
+    EXPECT_CALL(*loggerMock, write(_, _)).Times(1);
     WARNING_LOG(LOG_COMPONENT, __FUNCTION__);
 }
 
 TEST_F(SyslogLoggerTest, TestLogError)
 {
-    const boost::regex e(buildRegex("ERROR", __FUNCTION__));
+    EXPECT_CALL(*loggerMock, write(_, _)).Times(1);
     ERROR_LOG(LOG_COMPONENT, __FUNCTION__);
 }
 
 TEST_F(SyslogLoggerTest, TestLogCritical)
 {
-    const boost::regex e(buildRegex("CRITICAL", __FUNCTION__));
+    EXPECT_CALL(*loggerMock, write(_, _)).Times(1);
     CRITICAL_LOG(LOG_COMPONENT, __FUNCTION__);
 }
 
 TEST_F(SyslogLoggerTest, TestLogAlert)
 {
-    const boost::regex e(buildRegex("ALERT", __FUNCTION__));
+    EXPECT_CALL(*loggerMock, write(_, _)).Times(1);
     ALERT_LOG(LOG_COMPONENT, __FUNCTION__);
 }
 
 TEST_F(SyslogLoggerTest, TestLogEmergency)
 {
-    const boost::regex e(buildRegex("EMERGENCY", __FUNCTION__));
+    EXPECT_CALL(*loggerMock, write(_, _)).Times(1);
     EMERGENCY_LOG(LOG_COMPONENT, __FUNCTION__);
 }
 

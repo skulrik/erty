@@ -84,8 +84,22 @@ TEST_F(ConsoleLoggerTest, TestLogDebug)
 
 TEST_F(ConsoleLoggerTest, TestLogInfo)
 {
-    const boost::regex e(buildRegex("INFO ", __FUNCTION__));
+    const boost::regex e(buildRegex("INFO", __FUNCTION__));
     LOG_INFO(LOG_COMPONENT, __FUNCTION__);
+    ASSERT_TRUE(regex_match(stream->str(), e));
+}
+
+TEST_F(ConsoleLoggerTest, TestLogNotice)
+{
+    const boost::regex e(buildRegex("NOTICE", __FUNCTION__));
+    LOG_NOTICE(LOG_COMPONENT, __FUNCTION__);
+    ASSERT_TRUE(regex_match(stream->str(), e));
+}
+
+TEST_F(ConsoleLoggerTest, TestLogWarning)
+{
+    const boost::regex e(buildRegex("WARNING", __FUNCTION__));
+    LOG_WARNING(LOG_COMPONENT, __FUNCTION__);
     ASSERT_TRUE(regex_match(stream->str(), e));
 }
 
@@ -93,6 +107,27 @@ TEST_F(ConsoleLoggerTest, TestLogError)
 {
     const boost::regex e(buildRegex("ERROR", __FUNCTION__));
     LOG_ERROR(LOG_COMPONENT, __FUNCTION__);
+    ASSERT_TRUE(regex_match(stream->str(), e));
+}
+
+TEST_F(ConsoleLoggerTest, TestLogCritical)
+{
+    const boost::regex e(buildRegex("CRITICAL", __FUNCTION__));
+    LOG_CRITICAL(LOG_COMPONENT, __FUNCTION__);
+    ASSERT_TRUE(regex_match(stream->str(), e));
+}
+
+TEST_F(ConsoleLoggerTest, TestLogAlert)
+{
+    const boost::regex e(buildRegex("ALERT", __FUNCTION__));
+    LOG_ALERT(LOG_COMPONENT, __FUNCTION__);
+    ASSERT_TRUE(regex_match(stream->str(), e));
+}
+
+TEST_F(ConsoleLoggerTest, TestLogEmergency)
+{
+    const boost::regex e(buildRegex("EMERGENCY", __FUNCTION__));
+    LOG_EMERGENCY(LOG_COMPONENT, __FUNCTION__);
     ASSERT_TRUE(regex_match(stream->str(), e));
 }
 

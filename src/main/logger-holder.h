@@ -66,11 +66,46 @@
 #define LOG_INFO(component,message) LoggerHolder::Log<Info>(component, __FUNCTION__, __FILE__, __LINE__, message, Info())
 
 /**
+ * Macros to log a notice message
+ * @param component the log component
+ * @param message the message to log
+ */
+#define LOG_NOTICE(component,message) LoggerHolder::Log<Notice>(component, __FUNCTION__, __FILE__, __LINE__, message, Notice())
+
+/**
+ * Macros to log a warning message
+ * @param component the log component
+ * @param message the message to log
+ */
+#define LOG_WARNING(component,message) LoggerHolder::Log<Warning>(component, __FUNCTION__, __FILE__, __LINE__, message, Warning())
+
+/**
  * Macros to log an error message
  * @param component the log component
  * @param message the message to log
  */
 #define LOG_ERROR(component,message) LoggerHolder::Log<Error>(component, __FUNCTION__, __FILE__, __LINE__, message, Error())
+
+/**
+ * Macros to log a critical message
+ * @param component the log component
+ * @param message the message to log
+ */
+#define LOG_CRITICAL(component,message) LoggerHolder::Log<Critical>(component, __FUNCTION__, __FILE__, __LINE__, message, Critical())
+
+/**
+ * Macros to log an alert message
+ * @param component the log component
+ * @param message the message to log
+ */
+#define LOG_ALERT(component,message) LoggerHolder::Log<Alert>(component, __FUNCTION__, __FILE__, __LINE__, message, Alert())
+
+/**
+ * Macros to log an emergency message
+ * @param component the log component
+ * @param message the message to log
+ */
+#define LOG_EMERGENCY(component,message) LoggerHolder::Log<Emergency>(component, __FUNCTION__, __FILE__, __LINE__, message, Emergency())
 
 /** Map of base priority by component. */
 typedef std::map<std::string, unsigned int> LogComponents;

@@ -89,8 +89,22 @@ TEST_F(FileLoggerTest, TestLogDebug)
 
 TEST_F(FileLoggerTest, TestLogInfo)
 {
-    const boost::regex e(buildRegex("INFO ", __FUNCTION__));
+    const boost::regex e(buildRegex("INFO", __FUNCTION__));
     LOG_INFO(LOG_COMPONENT, __FUNCTION__);
+    ASSERT_TRUE(regex_match(readResultFile(), e));
+}
+
+TEST_F(FileLoggerTest, TestLogNotice)
+{
+    const boost::regex e(buildRegex("NOTICE", __FUNCTION__));
+    LOG_NOTICE(LOG_COMPONENT, __FUNCTION__);
+    ASSERT_TRUE(regex_match(readResultFile(), e));
+}
+
+TEST_F(FileLoggerTest, TestLogWarning)
+{
+    const boost::regex e(buildRegex("WARNING", __FUNCTION__));
+    LOG_WARNING(LOG_COMPONENT, __FUNCTION__);
     ASSERT_TRUE(regex_match(readResultFile(), e));
 }
 
@@ -98,6 +112,27 @@ TEST_F(FileLoggerTest, TestLogError)
 {
     const boost::regex e(buildRegex("ERROR", __FUNCTION__));
     LOG_ERROR(LOG_COMPONENT, __FUNCTION__);
+    ASSERT_TRUE(regex_match(readResultFile(), e));
+}
+
+TEST_F(FileLoggerTest, TestLogCritical)
+{
+    const boost::regex e(buildRegex("CRITICAL", __FUNCTION__));
+    LOG_CRITICAL(LOG_COMPONENT, __FUNCTION__);
+    ASSERT_TRUE(regex_match(readResultFile(), e));
+}
+
+TEST_F(FileLoggerTest, TestLogAlert)
+{
+    const boost::regex e(buildRegex("ALERT", __FUNCTION__));
+    LOG_ALERT(LOG_COMPONENT, __FUNCTION__);
+    ASSERT_TRUE(regex_match(readResultFile(), e));
+}
+
+TEST_F(FileLoggerTest, TestLogEmergency)
+{
+    const boost::regex e(buildRegex("EMERGENCY", __FUNCTION__));
+    LOG_EMERGENCY(LOG_COMPONENT, __FUNCTION__);
     ASSERT_TRUE(regex_match(readResultFile(), e));
 }
 

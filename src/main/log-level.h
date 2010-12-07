@@ -44,13 +44,45 @@ struct Info
     /** Return the logging level as a character string. */
     const char* level()
     {
-        return "INFO ";
+        return "INFO";
     }
 
     /** Return the logging prioriry value. */
     unsigned int priority()
     {
         return 10;
+    }
+};
+
+/** Trigger a notice log message */
+struct Notice
+{
+    /** Return the logging level as a character string. */
+    const char* level()
+    {
+        return "NOTICE";
+    }
+
+    /** Return the logging prioriry value. */
+    unsigned int priority()
+    {
+        return 20;
+    }
+};
+
+/** Trigger a warning log message */
+struct Warning
+{
+    /** Return the logging level as a character string. */
+    const char* level()
+    {
+        return "WARNING";
+    }
+
+    /** Return the logging prioriry value. */
+    unsigned int priority()
+    {
+        return 30;
     }
 };
 
@@ -66,7 +98,55 @@ struct Error
     /** Return the logging prioriry value. */
     unsigned int priority()
     {
-        return 20;
+        return 40;
+    }
+};
+
+/** Trigger a critical log message */
+struct Critical
+{
+    /** Return the logging level as a character string. */
+    const char* level()
+    {
+        return "CRITICAL";
+    }
+
+    /** Return the logging prioriry value. */
+    unsigned int priority()
+    {
+        return 50;
+    }
+};
+
+/** Trigger an alert log message */
+struct Alert
+{
+    /** Return the logging level as a character string. */
+    const char* level()
+    {
+        return "ALERT";
+    }
+
+    /** Return the logging prioriry value. */
+    unsigned int priority()
+    {
+        return 60;
+    }
+};
+
+/** Trigger an emergency log message */
+struct Emergency
+{
+    /** Return the logging level as a character string. */
+    const char* level()
+    {
+        return "EMERGENCY";
+    }
+
+    /** Return the logging prioriry value. */
+    unsigned int priority()
+    {
+        return 70;
     }
 };
 

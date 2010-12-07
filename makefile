@@ -13,7 +13,7 @@ ifdef OPTIMIZE
 endif
 
 ifdef DEBUG
-  CXXFLAGS+= -g
+  CXXFLAGS+= -g -DDEBUG
 endif
 
 ifdef PROFILE

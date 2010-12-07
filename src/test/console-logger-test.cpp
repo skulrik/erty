@@ -79,7 +79,9 @@ TEST_F(ConsoleLoggerTest, TestLogDebug)
 {
     const boost::regex e(buildRegex("DEBUG", __FUNCTION__));
     LOG_DEBUG(LOG_COMPONENT, __FUNCTION__);
+#ifdef DEBUG
     ASSERT_TRUE(regex_match(stream->str(), e));
+#endif
 }
 
 TEST_F(ConsoleLoggerTest, TestLogInfo)

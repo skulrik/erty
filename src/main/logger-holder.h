@@ -56,7 +56,11 @@
  * @param component the log component
  * @param message the message to log
  */
+#ifdef DEBUG
 #define LOG_DEBUG(component,message) LoggerHolder::Log<Debug>(component, __FUNCTION__, __FILE__, __LINE__, message, Debug())
+#else
+#define LOG_DEBUG(component,message)
+#endif
 
 /**
  * Macros to log an information message

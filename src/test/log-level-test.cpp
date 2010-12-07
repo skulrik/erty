@@ -504,5 +504,9 @@ TEST_F(LogLevelTest, TestDebugLogAppearsWhenLoggerPrioriryIsDebug)
 {
     REGISTER_LOG_COMPONENT(__CLASS__, Debug);
     LOG_DEBUG(__CLASS__, "debug");
+#ifdef DEBUG
     ASSERT_TRUE(stream->str().size() > 0);
+#else
+    ASSERT_TRUE(stream->str().size() == 0);
+#endif
 }

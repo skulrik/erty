@@ -26,6 +26,7 @@
 #include <fstream>
 #include <sstream>
 #include "logger.h"
+#include "utils.h"
 
 /**
  * Logger that output messages in a file.
@@ -40,7 +41,7 @@ public:
     FileLogger(const char* fileName)
     {
         std::stringstream ss;
-        ss << typeid(*this).name() << "::" << fileName;
+        ss << __CLASS__ << "::" << fileName;
         uuid(ss.str());
 
         _file.open(fileName, std::ios::app);

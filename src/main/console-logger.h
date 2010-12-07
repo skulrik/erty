@@ -25,6 +25,7 @@
 #include <string>
 #include <iostream>
 #include "logger.h"
+#include "utils.h"
 
 /**
  * Logger that output messages to the console.
@@ -37,7 +38,7 @@ public:
      */
     ConsoleLogger()
     {
-        uuid(typeid(*this).name());
+        uuid(__CLASS__);
     }
 
     /**

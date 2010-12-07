@@ -22,11 +22,10 @@
 #ifndef _LOGGER_H_
 #define _LOGGER_H_
 
+#include "log-level.h"
 #include <string>
 
-/**
- * Base class of all logger classes.
- */
+/** Base class of all logger classes. */
 class Logger
 {
 public:
@@ -44,9 +43,10 @@ public:
     /**
      * Log a message.
      * All loggerclass must implement this method.
+     * @param level the log level of the message.
      * @param message the message to log.
      */
-    virtual void write(const std::string& message) = 0;
+    virtual void write(const LogLevel& level, const std::string& message) = 0;
 
 protected:
 

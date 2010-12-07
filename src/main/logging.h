@@ -26,5 +26,6 @@
 #include "logger.h"
 #include "console-logger.h"
 #include "file-logger.h"
+#include "syslog-logger.h"
 
 #endif

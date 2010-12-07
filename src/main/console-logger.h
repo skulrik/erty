@@ -25,17 +25,14 @@
 #include <string>
 #include <iostream>
 #include "logger.h"
+#include "log-level.h"
 #include "utils.h"
 
-/**
- * Logger that output messages to the console.
- */
+/** Logger that output messages to the console. */
 class ConsoleLogger : public Logger
 {
 public:
-    /**
-     * Instanciate a new logger that will log to the console.
-     */
+    /** Instanciate a new logger that will log to the console. */
     ConsoleLogger()
     {
         uuid(__CLASS__);
@@ -45,7 +42,7 @@ public:
      * Write a message to the console.
      * @param message the message to log.
      */
-    virtual void write(const std::string& message)
+    virtual void write(const LogLevel& /*level*/, const std::string& message)
     {
         std::cout << message;
     }

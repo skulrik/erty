@@ -25,15 +25,15 @@ int main(int argc, char** argv)
 {
     REGISTER_LOGGER(ConsoleLogger);
 
-    LOG_INFO(LOG_MAIN_COMPONENT,"Startup");
+    INFO_LOG(LOG_MAIN_COMPONENT,"Startup");
     int result = mainImpl(argc, argv);;
     if (result == 0)
     {
-        LOG_INFO(LOG_MAIN_COMPONENT,"Shutdown");
+        INFO_LOG(LOG_MAIN_COMPONENT,"Shutdown");
     }
     else
     {
-        LOG_ERROR(LOG_MAIN_COMPONENT,"Failure");
+        ERROR_LOG(LOG_MAIN_COMPONENT,"Failure");
     }
     return result;
 }

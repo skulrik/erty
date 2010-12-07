@@ -25,116 +25,95 @@
 #include <boost/regex.hpp>
 #include <boost/format.hpp>
 
-#define LOG_COMPONENT "FileLoggerTest"
-#define TEST_OUTPUT_FILE_NAME "test-output/file-logger-test.log"
+#define LOG_COMPONENT "SyslogLoggerTest"
 
-class FileLoggerTest : public ::testing::Test
+class SyslogLoggerTest : public ::testing::Test
 {
 protected:
 
-    FileLoggerTest()
+    static void TearDownTestCase()
+    {
+        UNREGISTER_ALL_LOGGERS();
+    }
+
+    SyslogLoggerTest()
     {
     }
 
-    virtual ~FileLoggerTest()
+    virtual ~SyslogLoggerTest()
     {
     }
 
     virtual void SetUp()
     {
-        REGISTER_LOGGER(FileLogger(TEST_OUTPUT_FILE_NAME));
+        REGISTER_LOGGER(SyslogLogger);
         REGISTER_LOG_COMPONENT(LOG_COMPONENT, Debug);
     }
 
     virtual void TearDown()
     {
-        UNREGISTER_ALL_LOGGERS();
-        std::remove(TEST_OUTPUT_FILE_NAME);
     }
 
     const std::string buildRegex(const char* level, const char* message)
     {
-        return (_F("\\[%1%\\] \\[\\d{4}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\] \\[FileLoggerTest\\] from .* in .*:\\d* - %2%") % level % message).str();
-    }
-
-    const std::string readResultFile()
-    {
-        std::ifstream file;
-
-        file.open(TEST_OUTPUT_FILE_NAME, std::ios::in);
-
-        char buffer[1000];
-        file.getline(buffer, 1000);
-        file.close();
-
-        std::string s(buffer);
-
-        return s;
+        return (_F("\\[%1%\\] \\[\\d{4}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\] \\[SyslogLoggerTest\\] from .* in .*:\\d* - %2%\n") % level % message).str();
     }
 };
 
-TEST_F(FileLoggerTest, TestCannedLog)
+TEST_F(SyslogLoggerTest, TestCannedLog)
 {
-    std::string log("[INFO] [2010-Dec-02 10:45:40] [FileLoggerTest] from TestBody in src/test/logger-test.cpp:58 - TestCannedLog");
+    std::string log("[INFO] [2010-Dec-02 10:45:40] [SyslogLoggerTest] from TestBody in src/test/logger-test.cpp:58 - TestCannedLog\n");
     const boost::regex e(buildRegex("INFO", "TestCannedLog"));
     ASSERT_TRUE(regex_match(log, e));
 }
 
-TEST_F(FileLoggerTest, TestLogDebug)
+TEST_F(SyslogLoggerTest, TestLogDebug)
 {
     const boost::regex e(buildRegex("DEBUG", __FUNCTION__));
     DEBUG_LOG(LOG_COMPONENT, __FUNCTION__);
 #ifdef DEBUG
-    ASSERT_TRUE(regex_match(readResultFile(), e));
 #endif
 }
 
-TEST_F(FileLoggerTest, TestLogInfo)
+TEST_F(SyslogLoggerTest, TestLogInfo)
 {
     const boost::regex e(buildRegex("INFO", __FUNCTION__));
     INFO_LOG(LOG_COMPONENT, __FUNCTION__);
-    ASSERT_TRUE(regex_match(readResultFile(), e));
 }
 
-TEST_F(FileLoggerTest, TestLogNotice)
+TEST_F(SyslogLoggerTest, TestLogNotice)
 {
     const boost::regex e(buildRegex("NOTICE", __FUNCTION__));
     NOTICE_LOG(LOG_COMPONENT, __FUNCTION__);
-    ASSERT_TRUE(regex_match(readResultFile(), e));
 }
 
-TEST_F(FileLoggerTest, TestLogWarning)
+TEST_F(SyslogLoggerTest, TestLogWarning)
 {
     const boost::regex e(buildRegex("WARNING", __FUNCTION__));
     WARNING_LOG(LOG_COMPONENT, __FUNCTION__);
-    ASSERT_TRUE(regex_match(readResultFile(), e));
 }
 
-TEST_F(FileLoggerTest, TestLogError)
+TEST_F(SyslogLoggerTest, TestLogError)
 {
     const boost::regex e(buildRegex("ERROR", __FUNCTION__));
     ERROR_LOG(LOG_COMPONENT, __FUNCTION__);
-    ASSERT_TRUE(regex_match(readResultFile(), e));
 }
 
-TEST_F(FileLoggerTest, TestLogCritical)
+TEST_F(SyslogLoggerTest, TestLogCritical)
 {
     const boost::regex e(buildRegex("CRITICAL", __FUNCTION__));
     CRITICAL_LOG(LOG_COMPONENT, __FUNCTION__);
-    ASSERT_TRUE(regex_match(readResultFile(), e));
 }
 
-TEST_F(FileLoggerTest, TestLogAlert)
+TEST_F(SyslogLoggerTest, TestLogAlert)
 {
     const boost::regex e(buildRegex("ALERT", __FUNCTION__));
     ALERT_LOG(LOG_COMPONENT, __FUNCTION__);
-    ASSERT_TRUE(regex_match(readResultFile(), e));
 }
 
-TEST_F(FileLoggerTest, TestLogEmergency)
+TEST_F(SyslogLoggerTest, TestLogEmergency)
 {
     const boost::regex e(buildRegex("EMERGENCY", __FUNCTION__));
     EMERGENCY_LOG(LOG_COMPONENT, __FUNCTION__);
-    ASSERT_TRUE(regex_match(readResultFile(), e));
 }
 

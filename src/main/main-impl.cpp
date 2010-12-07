@@ -52,7 +52,7 @@ int mainImpl(int argc, char** argv)
     }
     catch (std::exception& e)
     {
-        LOG_ERROR(LOG_MAIN_COMPONENT,e.what());
+        ERROR_LOG(LOG_MAIN_COMPONENT,e.what());
         return EXIT_FAILURE;
     }
 }

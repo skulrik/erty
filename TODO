@@ -1,4 +1,3 @@
 - Thread-Safe IoC singleton.
-- Logging : add missing standard log level (Emergency, Alert, Critical, Warning, Notice)
-- Logging : implement a syslog logger.
+- Logging : mock the syslog logger in test.
 - Add a Registry class.

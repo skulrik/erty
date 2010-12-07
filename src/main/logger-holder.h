@@ -57,9 +57,9 @@
  * @param message the message to log
  */
 #ifdef DEBUG
-#define LOG_DEBUG(component,message) LoggerHolder::Log<Debug>(component, __FUNCTION__, __FILE__, __LINE__, message, Debug())
+#define DEBUG_LOG(component,message) LoggerHolder::Log(Debug(), component, __FUNCTION__, __FILE__, __LINE__, message)
 #else
-#define LOG_DEBUG(component,message)
+#define DEBUG_LOG(component,message)
 #endif
 
 /**
@@ -67,49 +67,49 @@
  * @param component the log component
  * @param message the message to log
  */
-#define LOG_INFO(component,message) LoggerHolder::Log<Info>(component, __FUNCTION__, __FILE__, __LINE__, message, Info())
+#define INFO_LOG(component,message) LoggerHolder::Log(Info(), component, __FUNCTION__, __FILE__, __LINE__, message)
 
 /**
  * Macros to log a notice message
  * @param component the log component
  * @param message the message to log
  */
-#define LOG_NOTICE(component,message) LoggerHolder::Log<Notice>(component, __FUNCTION__, __FILE__, __LINE__, message, Notice())
+#define NOTICE_LOG(component,message) LoggerHolder::Log(Notice(), component, __FUNCTION__, __FILE__, __LINE__, message)
 
 /**
  * Macros to log a warning message
  * @param component the log component
  * @param message the message to log
  */
-#define LOG_WARNING(component,message) LoggerHolder::Log<Warning>(component, __FUNCTION__, __FILE__, __LINE__, message, Warning())
+#define WARNING_LOG(component,message) LoggerHolder::Log(Warning(), component, __FUNCTION__, __FILE__, __LINE__, message)
 
 /**
  * Macros to log an error message
  * @param component the log component
  * @param message the message to log
  */
-#define LOG_ERROR(component,message) LoggerHolder::Log<Error>(component, __FUNCTION__, __FILE__, __LINE__, message, Error())
+#define ERROR_LOG(component,message) LoggerHolder::Log(Error(), component, __FUNCTION__, __FILE__, __LINE__, message)
 
 /**
  * Macros to log a critical message
  * @param component the log component
  * @param message the message to log
  */
-#define LOG_CRITICAL(component,message) LoggerHolder::Log<Critical>(component, __FUNCTION__, __FILE__, __LINE__, message, Critical())
+#define CRITICAL_LOG(component,message) LoggerHolder::Log(Critical(), component, __FUNCTION__, __FILE__, __LINE__, message)
 
 /**
  * Macros to log an alert message
  * @param component the log component
  * @param message the message to log
  */
-#define LOG_ALERT(component,message) LoggerHolder::Log<Alert>(component, __FUNCTION__, __FILE__, __LINE__, message, Alert())
+#define ALERT_LOG(component,message) LoggerHolder::Log(Alert(), component, __FUNCTION__, __FILE__, __LINE__, message)
 
 /**
  * Macros to log an emergency message
  * @param component the log component
  * @param message the message to log
  */
-#define LOG_EMERGENCY(component,message) LoggerHolder::Log<Emergency>(component, __FUNCTION__, __FILE__, __LINE__, message, Emergency())
+#define EMERGENCY_LOG(component,message) LoggerHolder::Log(Emergency(), component, __FUNCTION__, __FILE__, __LINE__, message)
 
 /** Map of base priority by component. */
 typedef std::map<std::string, unsigned int> LogComponents;
@@ -173,15 +173,14 @@ public:
 
     /**
      * Log method dispatcher by Loglevel.
+     * @param level the level of the log message.
      * @param component the component of the log message
      * @param function function name in which the log call was triggered.
      * @param file file name in which the log call was triggered.
      * @param line line in which the log call was triggered.
      * @param message the message to log.
-     * @param level the level of the log message.
      */
-    template <class LogLevel>
-    static void Log(const char* component, const char* function, const char* file, const int line, const char* message, LogLevel level)
+    static void Log(const LogLevel& level, const char* component, const char* function, const char* file, const int line, const char* message)
     {
         std::stringstream ss;
         ss << "[" << level.level() << "] [" << DateTime::Now() << "] [" << component << "] from " << function << " in " << file << ":" << line << " - " << message << std::endl;
@@ -193,10 +192,9 @@ public:
         {
             BOOST_FOREACH(LoggerPtr& logger, holder._loggerList)
             {
-                logger->write(ss.str());
+                logger->write(level, ss.str());
             }
         }
-
     }
 
 private:
@@ -230,7 +228,11 @@ private:
      */
     unsigned int getComponentPriority(const std::string& component) const
     {
+#ifdef DEBUG
+        unsigned int priority = Debug().priority();
+#else
         unsigned int priority = Info().priority();
+#endif
         LogComponents::const_iterator logComponent = _logComponents.find(component);
         if (logComponent != _logComponents.end())
         {

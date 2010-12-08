@@ -24,191 +24,108 @@
 
 #include <syslog.h>
 
-struct LogLevel
+class LogLevel
 {
+public:
     /** Return the logging level as a character string. */
-    virtual const char* level() const = 0;
+    const char* level() const
+    {
+        return _level;
+    }
 
     /** return the logging prioriry value. */
-    virtual unsigned int priority() const = 0;
+    unsigned int priority() const
+    {
+        return _priority;
+    }
 
     /** return the logging prioriry value for syslog. */
-    virtual unsigned int syslogPriority() const = 0;
+    unsigned int syslogPriority() const
+    {
+        return _syslogPriority;
+    }
+
+protected:
+    LogLevel(const char* level, const unsigned int priority, const unsigned int syslogPriority)
+        : _level(level), _priority(priority), _syslogPriority(syslogPriority)
+    {
+    }
+
+private:
+    const char* _level;
+    const unsigned int _priority;
+    const unsigned int _syslogPriority;
 };
 
 /** Trigger a debug log message */
-struct Debug : public LogLevel
+class Debug : public LogLevel
 {
-    /** Return the debug logging level as a character string. */
-    const char* level() const
+public:
+    Debug() : LogLevel("DEBUG", 0, LOG_DEBUG)
     {
-        return "DEBUG";
-    }
-
-    /** return the debug logging prioriry value. */
-    unsigned int priority() const
-    {
-        return 0;
-    }
-
-    /** return the debug logging prioriry value for syslog. */
-    unsigned int syslogPriority() const
-    {
-        return LOG_DEBUG;
     }
 };
 
 /** trigger an information log message */
-struct Info : public LogLevel
+class Info : public LogLevel
 {
-    /** return the info logging level as a character string. */
-    const char* level() const
+public:
+    Info() : LogLevel("INFO", 10, LOG_INFO)
     {
-        return "INFO";
-    }
-
-    /** return the info logging prioriry value. */
-    unsigned int priority() const
-    {
-        return 10;
-    }
-
-    /** return the info logging prioriry value for syslog. */
-    unsigned int syslogPriority() const
-    {
-        return LOG_INFO;
     }
 };
 
 /** Trigger a notice log message */
-struct Notice : public LogLevel
+class Notice : public LogLevel
 {
-    /** Return the notice logging level as a character string. */
-    const char* level() const
+public:
+    Notice() : LogLevel("NOTICE", 20, LOG_NOTICE)
     {
-        return "NOTICE";
-    }
-
-    /** Return the notice logging prioriry value. */
-    unsigned int priority() const
-    {
-        return 20;
-    }
-
-    /** return the notice logging prioriry value for syslog. */
-    unsigned int syslogPriority() const
-    {
-        return LOG_NOTICE;
     }
 };
 
 /** Trigger a warning log message */
-struct Warning : public LogLevel
+class Warning : public LogLevel
 {
-    /** Return the warning logging level as a character string. */
-    const char* level() const
+public:
+    Warning() : LogLevel("WARNING", 30, LOG_WARNING)
     {
-        return "WARNING";
-    }
-
-    /** Return the warning logging prioriry value. */
-    unsigned int priority() const
-    {
-        return 30;
-    }
-
-    /** return the warning logging prioriry value for syslog. */
-    unsigned int syslogPriority() const
-    {
-        return LOG_WARNING;
     }
 };
 
 /** Trigger an error log message */
-struct Error : public LogLevel
+class Error : public LogLevel
 {
-    /** Return the error logging level as a character string. */
-    const char* level() const
+public:
+    Error() : LogLevel("ERROR", 40, LOG_ERR)
     {
-        return "ERROR";
-    }
-
-    /** Return the error logging prioriry value. */
-    unsigned int priority() const
-    {
-        return 40;
-    }
-
-    /** return the error logging prioriry value for syslog. */
-    unsigned int syslogPriority() const
-    {
-        return LOG_ERR;
     }
 };
 
 /** Trigger a critical log message */
-struct Critical : public LogLevel
+class Critical : public LogLevel
 {
-    /** Return the critical logging level as a character string. */
-    const char* level() const
+public:
+    Critical() : LogLevel("CRITICAL", 50, LOG_CRIT)
     {
-        return "CRITICAL";
-    }
-
-    /** Return the critical logging prioriry value. */
-    unsigned int priority() const
-    {
-        return 50;
-    }
-
-    /** return the critical logging prioriry value for syslog. */
-    unsigned int syslogPriority() const
-    {
-        return LOG_CRIT;
     }
 };
 
 /** Trigger an alert log message */
-struct Alert : public LogLevel
+class Alert : public LogLevel
 {
-    /** Return the alert logging level as a character string. */
-    const char* level() const
+public:
+    Alert() : LogLevel("ALERT", 60, LOG_ALERT)
     {
-        return "ALERT";
-    }
-
-    /** Return the alert logging prioriry value. */
-    unsigned int priority() const
-    {
-        return 60;
-    }
-
-    /** return the alert logging prioriry value for syslog. */
-    unsigned int syslogPriority() const
-    {
-        return LOG_ALERT;
     }
 };
 
 /** Trigger an emergency log message */
-struct Emergency : public LogLevel
+class Emergency : public LogLevel
 {
-    /** Return the emergency logging level as a character string. */
-    const char* level() const
+public:
+    Emergency() : LogLevel("EMERGENCY", 70, LOG_EMERG)
     {
-        return "EMERGENCY";
-    }
-
-    /** Return the emergency logging prioriry value. */
-    unsigned int priority() const
-    {
-        return 70;
-    }
-
-    /** return the emergency logging prioriry value for syslog. */
-    unsigned int syslogPriority() const
-    {
-        return LOG_EMERG;
     }
 };
 

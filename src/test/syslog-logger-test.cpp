@@ -53,8 +53,8 @@ protected:
     virtual void SetUp()
     {
         REGISTER_LOG_COMPONENT(LOG_COMPONENT, Debug);
-        EXPECT_CALL(*loggerMock, uuid()).WillRepeatedly(Return(std::string(LOG_COMPONENT)));
         loggerMock = static_cast<SyslogLoggerMock*>(REGISTER_LOGGER(SyslogLoggerMock));
+        EXPECT_CALL(*loggerMock, uuid()).WillRepeatedly(Return(std::string(LOG_COMPONENT)));
     }
 
     virtual void TearDown()

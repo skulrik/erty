@@ -510,3 +510,11 @@ TEST_F(LogLevelTest, TestDebugLogAppearsWhenLoggerPrioriryIsDebug)
     ASSERT_TRUE(stream->str().size() == 0);
 #endif
 }
+
+TEST_F(LogLevelTest, TestEmergencyLogDontAppearsWhenLoggerPrioriryIsNullLogLevel)
+{
+    REGISTER_LOG_COMPONENT(__CLASS__, NullLogLevel);
+    EMERGENCY_LOG(__CLASS__, "emergency");
+    ASSERT_TRUE(stream->str().size() == 0);
+}
+

@@ -132,4 +132,3 @@ TEST_F(ConsoleLoggerTest, TestLogEmergency)
     EMERGENCY_LOG(LOG_COMPONENT, __FUNCTION__);
     ASSERT_TRUE(regex_match(stream->str(), e));
 }
-

@@ -49,6 +49,12 @@
 #define _F boost::format
 
 /**
+ * Define a shortcut to get the type name of an object.
+ * @param object the object to retrieve it type name.
+ */
+#define DEMANGLE(object) demangle(typeid(object).name()).c_str()
+
+/**
  * Define a shorcut macro to get the current object class name.
  */
 #define __CLASS__ demangle(typeid(*this).name()).c_str()

@@ -44,6 +44,9 @@ public:
         std::runtime_error((_F("IoCException: %1%") % message).str()) {}
 };
 
+/** Type in which are registered the instance. */
+typedef std::map<std::string, boost::shared_ptr<void> > IoCContainer;
+
 /**
  * Inversion od control container class.
  * All the container does is mapping the name of an interface to an instance of this interface.
@@ -59,7 +62,7 @@ public:
     template<class T>
     static void Register(T* objectPtr)
     {
-        _typeInstanceMap[typeid(T).name()] = boost::shared_ptr<void>(objectPtr);
+        _iocContainer[getTypeName<T>()] = boost::shared_ptr<void>(objectPtr);
     }
 
     /**
@@ -70,7 +73,7 @@ public:
     template<class T>
     static T* Resolve()
     {
-        return (T*)(_typeInstanceMap[typeid(T).name()].get());
+        return (T*)(_iocContainer[getTypeName<T>()].get());
     }
 
     /**
@@ -81,7 +84,7 @@ public:
     template<class T>
     static bool IsRegistered()
     {
-        return (_typeInstanceMap.find(typeid(T).name()) != _typeInstanceMap.end());
+        return (_iocContainer.find(getTypeName<T>()) != _iocContainer.end());
     }
 
     /**
@@ -92,6 +95,7 @@ public:
     static void UnRegister()
     {
         Register<T>(0);
+        _iocContainer.erase(getTypeName<T>());
     }
 
     /**
@@ -119,8 +123,20 @@ public:
     }
 
 private:
+
+    /**
+     * Return the string version of a type name.
+     * @tparam T the type
+     * @return the type name
+     */
+    template <class T>
+    static std::string getTypeName()
+    {
+        return DEMANGLE(T);
+    }
+
     /** The map name->instance. */
-    static std::map<std::string, boost::shared_ptr<void> > _typeInstanceMap;
+    static IoCContainer _iocContainer;
 
     DISALLOW_DEFAULT_COPY_AND_ASSIGN(IoC);
 };

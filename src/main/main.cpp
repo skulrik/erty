@@ -23,7 +23,7 @@
 
 int main(int argc, char** argv)
 {
-    REGISTER_LOGGER(ConsoleLogger);
+    LoggingConf().load("conf/logging.xml");
 
     INFO_LOG(LOG_MAIN_COMPONENT,"Startup");
     int result = mainImpl(argc, argv);;

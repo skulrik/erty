@@ -1,0 +1,10 @@
+<logging>
+    <components>
+    </components>
+    <loggers>
+        <logger>
+            <type>console</type>
+        </logger>
+    </loggers>
+</logging>
+

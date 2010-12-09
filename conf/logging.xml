@@ -1,0 +1,21 @@
+<logging>
+    <components>
+        <component>
+            <name>main</name>
+            <level>info</level>
+        </component>
+    </components>
+    <loggers>
+        <logger>
+            <type>console</type>
+        </logger>
+        <logger>
+            <type>file</type>
+            <file-name>CPP_APP_TEMPLATE.log</file-name>
+        </logger>
+        <logger>
+            <type>syslog</type>
+        </logger>
+    </loggers>
+</logging>
+

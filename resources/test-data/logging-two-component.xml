@@ -1,0 +1,15 @@
+<logging>
+    <components>
+        <component>
+            <name>main</name>
+            <level>info</level>
+        </component>
+        <component>
+            <name>test</name>
+            <level>error</level>
+        </component>
+    </components>
+    <loggers>
+    </loggers>
+</logging>
+

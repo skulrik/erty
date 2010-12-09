@@ -49,7 +49,7 @@
  * @param component the component identifier string
  * @param level the associate logging level.  Only log message with priority greater or equal that this level will be log.
  */
-#define REGISTER_LOG_COMPONENT(component,level) LoggerHolder::RegisterLogComponent<level>(component, level())
+#define REGISTER_LOG_COMPONENT(component,level) LoggerHolder::RegisterLogComponent(component, level())
 
 /**
  * Macros to log a debug message
@@ -166,14 +166,19 @@ public:
         holder._loggerList.clear();
     }
 
-    template <class LogLevel>
-    static void RegisterLogComponent(const std::string& component, LogLevel logLevel)
+    /**
+     * Register a new log component.
+     * If the component is already registered, only change its base priority.
+     * @param component the component to register.
+     * @param level only log message with priority greater or equal to this level will be logged.
+     */
+    static void RegisterLogComponent(const std::string& component, const LogLevel& level)
     {
         LoggerHolder& holder = GetLoggerHolder();
-        holder._logComponents[component] = logLevel.priority();
+        holder._logComponents[component] = level.priority();
     }
 
-    /**
+    /*
      * Log method dispatcher by Loglevel.
      * @param level the level of the log message.
      * @param component the component of the log message

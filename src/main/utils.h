@@ -22,6 +22,9 @@
 #ifndef _UTILS_H_
 #define _UTILS_H_
 
+#include <string>
+#include <boost/algorithm/string.hpp>
+
 /**
  * Insert a copy constructor and a assignment operator that do nothing in a class.
  * Must be place under the private section of the class definition.
@@ -48,4 +51,29 @@
  * Define a shorcut macro to get the current object class name.
  */
 #define __CLASS__ demangle(typeid(*this).name()).c_str()
+
+/**
+ * Return a lowercase version of a string.
+ * @param str the string to lowercase.
+ * @return the lowercase version of the string.
+ */
+inline std::string toLower(const std::string& str)
+{
+    std::string lowerStr = str;
+    boost::to_lower(lowerStr);
+    return lowerStr;
+}
+
+/**
+ * Return a uppercase version of a string.
+ * @param str the string to uppercase.
+ * @return the uppercase version of the string.
+ */
+inline std::string toUpper(const std::string& str)
+{
+    std::string upperStr = str;
+    boost::to_upper(upperStr);
+    return upperStr;
+}
+
 #endif

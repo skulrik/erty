@@ -1,2 +1,6 @@
 - Thread-Safe IoC singleton.
-- Logging : register logger from a configuration file.
+- Logging : add a NullLogger and a NullLogLevel.
+- Logging : add test for LogLevelFactory and LoggerFactory.
+- Logging : on startup, load the logging config file (path from command line parameter?) default to ConsoleLogger if error occurs.
+- Utils : add test method for utils methods.
+- IoC : Extract common GetOrCreate method that check is an object is registered, and if not, create it, register it, and return it.

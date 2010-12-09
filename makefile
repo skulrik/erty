@@ -13,7 +13,7 @@ ifdef OPTIMIZE
 endif
 
 ifdef DEBUG
-  CXXFLAGS+= -g -DDEBUG
+  CXXFLAGS+= -g -rdynamic -DDEBUG
 endif
 
 ifdef PROFILE
@@ -115,6 +115,9 @@ test:	clean.build build.test
 	$(TEST_EXEC_APP) --gtest_shuffle --gtest_output=xml:$(REPORT_DIR)/test/$(PROJECT_NAME)_TEST.xml
 	cp -f $(REPORT_TOOLS_DIR)/gtest.xsl $(REPORT_DIR)/test/
 	sed -i 's/<?xml version="1.0" encoding="UTF-8"?>/<?xml version="1.0" encoding="UTF-8"?>\n<?xml-stylesheet type="text\/xsl" href="gtest.xsl"?>/' $(REPORT_DIR)/test/$(PROJECT_NAME)_TEST.xml
+
+run.test:
+	$(TEST_EXEC_APP) --gtest_shuffle
 
 prod: clean
 	make "OPTIMIZE=1" build

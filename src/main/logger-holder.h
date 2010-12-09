@@ -138,6 +138,12 @@ class LoggerHolder
 {
 public:
 
+    /** LoggerHolder defaulr constructor. */
+    LoggerHolder() :
+        _logComponents(), _loggerList()
+    {
+    }
+
     /**
      * Register a new logger.
      * If the logger is already registered, its priority will be adjuted to match the requested one.
@@ -146,7 +152,7 @@ public:
      */
     static Logger* RegisterLogger(Logger* logger)
     {
-        LoggerHolder& holder = GetLoggerHolder();
+        LoggerHolder& holder = IoC::Inject<LoggerHolder>();
         LoggerPtr loggerPtr = LoggerPtr(logger);
 
         LoggerList::iterator loggerIter = std::find(holder._loggerList.begin(), holder._loggerList.end(), loggerPtr);
@@ -162,7 +168,7 @@ public:
      */
     static void UnregisterAllLoggers()
     {
-        LoggerHolder& holder = GetLoggerHolder();
+        LoggerHolder& holder = IoC::Inject<LoggerHolder>();
         holder._loggerList.clear();
     }
 
@@ -174,7 +180,7 @@ public:
      */
     static void RegisterLogComponent(const std::string& component, const LogLevel& level)
     {
-        LoggerHolder& holder = GetLoggerHolder();
+        LoggerHolder& holder = IoC::Inject<LoggerHolder>();
         holder._logComponents[component] = level.priority();
     }
 
@@ -192,7 +198,7 @@ public:
         std::stringstream ss;
         ss << "[" << level.level() << "] [" << DateTime::Now() << "] [" << component << "] from " << function << " in " << file << ":" << line << " - " << message << std::endl;
 
-        LoggerHolder& holder = GetLoggerHolder();
+        LoggerHolder& holder = IoC::Inject<LoggerHolder>();
         unsigned int priority = holder.getComponentPriority(component);
 
         if (level.priority() >= priority)
@@ -205,28 +211,6 @@ public:
     }
 
 private:
-
-    /**
-     * Retrieve the logger holder from the IoC container.
-     * Create it if its not there.
-     * @return the logger holder.
-     */
-    static LoggerHolder& GetLoggerHolder()
-    {
-        LoggerHolder* loggerHolder = 0;
-
-        if (IoC::IsRegistered<LoggerHolder>())
-        {
-            loggerHolder = IoC::Resolve<LoggerHolder>();
-        }
-        else
-        {
-            loggerHolder = new LoggerHolder();
-            IoC::Register<LoggerHolder>(loggerHolder);
-        }
-
-        return *loggerHolder;
-    }
 
     /**
      * Return the base priority of a component.
@@ -253,12 +237,6 @@ private:
 
     /** Keep the list of registered logger object. */
     LoggerList _loggerList;
-
-    /** LoggerHolder defaulr constructor. */
-    LoggerHolder() :
-        _logComponents(), _loggerList()
-    {
-    }
 
     DISALLOW_COPY_AND_ASSIGN(LoggerHolder);
 };

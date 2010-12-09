@@ -94,11 +94,36 @@ public:
         Register<T>(0);
     }
 
+    /**
+     * Retrieve an object from the ioc container, to inject it in the current context.
+     * Create it if its not there.
+     * @tparam T the type of the object to inject.
+     * @return the requested object.
+     */
+    template <class T>
+    static T& Inject()
+    {
+        T* object = 0;
+
+        if (IoC::IsRegistered<T>())
+        {
+            object = IoC::Resolve<T>();
+        }
+        else
+        {
+            object = new T();
+            IoC::Register<T>(object);
+        }
+
+        return *object;
+    }
+
 private:
     /** The map name->instance. */
     static std::map<std::string, boost::shared_ptr<void> > _typeInstanceMap;
 
     DISALLOW_DEFAULT_COPY_AND_ASSIGN(IoC);
 };
+
 
 #endif

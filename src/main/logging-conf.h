@@ -84,7 +84,7 @@ private:
      */
     void registerLogComponents(ptree& pt) const
     {
-        LogLevelFactory& logLevelFactory = getLogLevelFactory();
+        LogLevelFactory& logLevelFactory = IoC::Inject<LogLevelFactory>();
         BOOST_FOREACH(ptree::value_type &v, pt.get_child("logging.components"))
         {
             std::string componentName = v.second.get<std::string>("name");
@@ -101,7 +101,7 @@ private:
      */
     void registerLoggers(ptree& pt) const
     {
-        LoggerFactory& loggerFactory = getLoggerFactory();
+        LoggerFactory& loggerFactory = IoC::Inject<LoggerFactory>();
         BOOST_FOREACH(ptree::value_type &v, pt.get_child("logging.loggers"))
         {
             std::string loggerType = v.second.get<std::string>("type");
@@ -114,49 +114,6 @@ private:
         }
     }
 
-    /**
-     * Retrieve the log level factory from the IoC container.
-     * Create it if its not there.
-     * @return the log level factory.
-     */
-    LogLevelFactory& getLogLevelFactory() const
-    {
-        LogLevelFactory* logLevelFactory = 0;
-
-        if (IoC::IsRegistered<LogLevelFactory>())
-        {
-            logLevelFactory = IoC::Resolve<LogLevelFactory>();
-        }
-        else
-        {
-            logLevelFactory = new LogLevelFactory();
-            IoC::Register<LogLevelFactory>(logLevelFactory);
-        }
-
-        return *logLevelFactory;
-    }
-
-    /**
-     * Retrieve the logger factory from the IoC container.
-     * Create it if its not there.
-     * @return the logger factory.
-     */
-    LoggerFactory& getLoggerFactory() const
-    {
-        LoggerFactory* loggerFactory = 0;
-
-        if (IoC::IsRegistered<LoggerFactory>())
-        {
-            loggerFactory = IoC::Resolve<LoggerFactory>();
-        }
-        else
-        {
-            loggerFactory = new LoggerFactory();
-            IoC::Register<LoggerFactory>(loggerFactory);
-        }
-
-        return *loggerFactory;
-    }
 };
 
 

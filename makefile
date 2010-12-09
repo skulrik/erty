@@ -57,11 +57,11 @@ all:	clean init ctags cscope report
 report: clean init
 	cp -f $(REPORT_TOOLS_DIR)/index.html $(REPORT_DIR)/
 	sed -i 's/@PROJECT_NAME@/$(PROJECT_NAME)/' $(REPORT_DIR)/index.html
+	make "DEBUG=1" "PROFILE=1" lcov
 	make ctags
 	make doxygen
 	make test
 	make "DEBUG=1" valgrind
-	make "DEBUG=1" "PROFILE=1" lcov
 	make cccc
 	make ccm
 
@@ -75,6 +75,7 @@ init:
 	mkdir -p $(BUILD_TEST_DIR)
 	mkdir -p $(REPORT_DIR)
 	mkdir -p $(BIN_DIR)
+	mkdir -p $(TEST_OUTPUT_DIR)
 
 ctags:
 	ctags -R $(SRC_DIR)
@@ -109,8 +110,7 @@ compile.test: $(TEST_OBJECTS)
 link.test:
 	$(CXX) $(TEST_OBJECTS) $(CXXLIBS) -L/usr/local/lib -lpthread -lgtest -lgmock -o $(TEST_EXEC_APP)
 
-test:	build.test
-	mkdir -p $(TEST_OUTPUT_DIR)
+test:	clean.build build.test
 	mkdir -p $(REPORT_DIR)/test
 	$(TEST_EXEC_APP) --gtest_shuffle --gtest_output=xml:$(REPORT_DIR)/test/$(PROJECT_NAME)_TEST.xml
 	cp -f $(REPORT_TOOLS_DIR)/gtest.xsl $(REPORT_DIR)/test/
@@ -140,9 +140,12 @@ doxygen:
 	mkdir -p $(REPORT_DIR)/doxygen
 	doxygen $(REPORT_TOOLS_DIR)/doxyfile
 
-lcov: clean.build test
+lcov: clean.build build.test
 	mkdir -p $(REPORT_DIR)/lcov
-	lcov --derive-func-data --directory $(BUILD_DIR) --base-directory . --capture --output-file $(REPORT_DIR)/lcov/$(PROJECT_NAME).capture.info
+	lcov --derive-func-data --directory $(BUILD_DIR) --base-directory . --capture --initial --output-file $(REPORT_DIR)/lcov/$(PROJECT_NAME).capture.before.info
+	$(TEST_EXEC_APP)
+	lcov --derive-func-data --directory $(BUILD_DIR) --base-directory . --capture --output-file $(REPORT_DIR)/lcov/$(PROJECT_NAME).capture.after.info
+	lcov --derive-func-data --add-tracefile $(REPORT_DIR)/lcov/$(PROJECT_NAME).capture.before.info --add-tracefile $(REPORT_DIR)/lcov/$(PROJECT_NAME).capture.after.info --output-file $(REPORT_DIR)/lcov/$(PROJECT_NAME).capture.info
 	lcov --derive-func-data --extract $(REPORT_DIR)/lcov/$(PROJECT_NAME).capture.info *$(PROJECT_NAME)* --output-file $(REPORT_DIR)/lcov/$(PROJECT_NAME).extract.info
 	genhtml -s -k --legend --demangle-cpp $(REPORT_DIR)/lcov/$(PROJECT_NAME).extract.info -o $(REPORT_DIR)/lcov/
 

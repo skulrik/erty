@@ -23,6 +23,7 @@
 #define _LOGGER_H_
 
 #include "log-level.h"
+#include "utils.h"
 #include <string>
 
 /** Base class of all logger classes. */
@@ -76,4 +77,23 @@ inline bool operator==(const Logger& a, const Logger& b)
     return (a.uuid() == b.uuid());
 }
 
+/**
+ * Special logger, that will not log anything.
+ */
+class NullLogger : public Logger
+{
+public:
+    /** Instanciate a new logger that will do nothing. */
+    NullLogger()
+    {
+        uuid(__CLASS__);
+    }
+
+    /**
+     * Do nothing.
+     */
+    virtual void write(const LogLevel& /*level*/, const std::string& /*message*/)
+    {
+    }
+};
 #endif

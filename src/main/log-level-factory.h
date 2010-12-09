@@ -76,7 +76,7 @@ public:
         {
             return new Emergency();
         }
-        return 0;
+        return new NullLogLevel();;
     }
 };
 

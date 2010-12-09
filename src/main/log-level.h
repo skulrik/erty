@@ -22,6 +22,7 @@
 #ifndef _LOG_LEVEL_H_
 #define _LOG_LEVEL_H_
 
+#include <limits>
 #include <syslog.h>
 
 class LogLevel
@@ -125,6 +126,15 @@ class Emergency : public LogLevel
 {
 public:
     Emergency() : LogLevel("EMERGENCY", 70, LOG_EMERG)
+    {
+    }
+};
+
+/** Trigger a message that will not be logged. */
+class NullLogLevel : public LogLevel
+{
+public:
+    NullLogLevel() : LogLevel("NULL", std::numeric_limits<unsigned int>::max(), -1)
     {
     }
 };

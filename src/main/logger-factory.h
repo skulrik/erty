@@ -60,7 +60,7 @@ public:
         {
             return new SyslogLogger();
         }
-        return 0;
+        return new NullLogger();;
     }
 };
 

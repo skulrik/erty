@@ -33,7 +33,6 @@
 #include "log-level.h"
 #include "datetime.h"
 #include "utils.h"
-#include "demangle.h"
 #include "ioc.h"
 
 /**

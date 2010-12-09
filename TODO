@@ -1,5 +1,4 @@
 - Thread-Safe IoC singleton.
-- Logging : add a NullLogger and a NullLogLevel.
 - Logging : add test for LogLevelFactory and LoggerFactory.
 - Logging : on startup, load the logging config file (path from command line parameter?) default to ConsoleLogger if error occurs.
 - Utils : add test method for utils methods.

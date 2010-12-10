@@ -1,2 +1,4 @@
 - Thread-Safe IoC singleton.
 - Logging : on startup, load the logging config file (path from command line parameter?) default to ConsoleLogger if error occurs.
+- Config : Replace logging.xml with a more generic configuration file.
+- Config : Dont crash if a entry is not present in the xml file.

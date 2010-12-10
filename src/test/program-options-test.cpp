@@ -55,3 +55,31 @@ TEST(ProgramOptionsTest, UsageIsNotEmpty)
     ASSERT_FALSE(programOptions.getUsage().empty());
 }
 
+TEST(ProgramOptionsTest, TestThatSpecifyNoConfigFileReturnTheDefaultValue)
+{
+    const char* cmdLine[] = { "APP_NAME" };
+    ProgramOptions programOptions(1, (char**)cmdLine);
+    ASSERT_EQ(programOptions.getConfigFilePath(), "conf/logging.xml");
+}
+
+TEST(ProgramOptionsTest, TestThatSpecifyLongConfigFileOptionReturnTheSpecifiedValue)
+{
+    const char* cmdLine[] = { "APP_NAME", "--config-file=test" };
+    ProgramOptions programOptions(2, (char**)cmdLine);
+    ASSERT_EQ("test", programOptions.getConfigFilePath());
+}
+
+TEST(ProgramOptionsTest, TestThatSpecifyShortConfigFileOptionReturnTheSpecifiedValue)
+{
+    const char* cmdLine[] = { "APP_NAME", "-ctest" };
+    ProgramOptions programOptions(2, (char**)cmdLine);
+    ASSERT_EQ("test", programOptions.getConfigFilePath());
+}
+
+TEST(ProgramOptionsTest, TestThatSpecifyShortConfigFileOptionWithSpaceReturnTheSpecifiedValue)
+{
+    const char* cmdLine[] = { "APP_NAME", "-c", "test" };
+    ProgramOptions programOptions(3, (char**)cmdLine);
+    ASSERT_EQ("test", programOptions.getConfigFilePath());
+}
+

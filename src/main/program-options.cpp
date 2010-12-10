@@ -28,7 +28,8 @@ ProgramOptions::ProgramOptions(int argc, char** argv) :
     _desc(_("Allowed options")), _vm()
 {
     _desc.add_options()
-    ("help,h", _("Display this message"));
+    ("help,h", _("Display this message"))
+    ("config-file,c", po::value<std::string>()->default_value("conf/logging.xml"), "Configuration file path");
 
     try
     {
@@ -44,6 +45,11 @@ ProgramOptions::ProgramOptions(int argc, char** argv) :
 bool ProgramOptions::isHelpMode()
 {
     return (_vm.count("help"));
+}
+
+std::string ProgramOptions::getConfigFilePath()
+{
+    return _vm["config-file"].as<std::string>();
 }
 
 std::string ProgramOptions::getUsage()

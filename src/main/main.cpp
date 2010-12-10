@@ -19,21 +19,8 @@
 ===============================================================================
 */
 #include "main-impl.h"
-#include "logging.h"
 
 int main(int argc, char** argv)
 {
-    LoggingConf().load("conf/logging.xml");
-
-    INFO_LOG(LOG_MAIN_COMPONENT,"Startup");
-    int result = mainImpl(argc, argv);;
-    if (result == 0)
-    {
-        INFO_LOG(LOG_MAIN_COMPONENT,"Shutdown");
-    }
-    else
-    {
-        ERROR_LOG(LOG_MAIN_COMPONENT,"Failure");
-    }
-    return result;
+    return mainImpl(argc, argv);;
 }

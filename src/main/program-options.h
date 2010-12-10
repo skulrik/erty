@@ -64,6 +64,12 @@ public:
     bool isHelpMode();
 
     /**
+     * Return the path to the configuration file, specified with the --config-file option.
+     * @return the configuration file path (default to conf/logging.xml.
+     */
+    std::string getConfigFilePath();
+
+    /**
      * Return the program usage.
      * @return All the available program options.
      */

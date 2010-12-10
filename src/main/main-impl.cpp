@@ -29,6 +29,7 @@
 
 int mainImpl(int argc, char** argv)
 {
+    int result = EXIT_SUCCESS;
     try
     {
         // Set up locale using current LANG environment variable
@@ -42,17 +43,33 @@ int mainImpl(int argc, char** argv)
         if (programOptions->isHelpMode())
         {
             std::cout << programOptions->getUsage();
-            return EXIT_FAILURE;
+            result = EXIT_FAILURE;
         }
 
+        // Get the configuration file path
+        std::string configFile = programOptions->getConfigFilePath();
+
+        // Set up the logging environment
+        LoggingConf().load(configFile);
 
         // Execute the main application code
-        std::cout << _("Hello, World!") << std::endl;
-        return EXIT_SUCCESS;
+        if (result != EXIT_FAILURE)
+        {
+            INFO_LOG(LOG_MAIN_COMPONENT,"Startup");
+            std::cout << _("Hello, World!") << std::endl;
+            INFO_LOG(LOG_MAIN_COMPONENT,"Shutdown");
+        }
     }
     catch (std::exception& e)
     {
         ERROR_LOG(LOG_MAIN_COMPONENT,e.what());
-        return EXIT_FAILURE;
+        result = EXIT_FAILURE;
     }
+
+    if (result == EXIT_FAILURE)
+    {
+        ERROR_LOG(LOG_MAIN_COMPONENT,"Failure");
+    }
+
+    return result;
 }

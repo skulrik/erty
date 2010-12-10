@@ -1,4 +1,12 @@
 <configuration>
+    <options>
+        <option>
+            <name>verbose,v</name>
+            <type>boolean</type>
+            <default>false</default>
+            <value>false</value>
+        </option>
+    </options>
     <logging>
         <components>
             <component>

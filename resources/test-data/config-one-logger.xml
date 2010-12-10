@@ -1,7 +1,5 @@
 <configuration>
     <logging>
-        <components>
-        </components>
         <loggers>
             <logger>
                 <type>console</type>

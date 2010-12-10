@@ -6,8 +6,6 @@
                 <level>info</level>
             </component>
         </components>
-        <loggers>
-        </loggers>
     </logging>
 </configuration>
 

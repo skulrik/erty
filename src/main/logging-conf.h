@@ -25,6 +25,7 @@
 #include "log-level-factory.h"
 #include "logger-factory.h"
 #include "ioc.h"
+#include "configuration-parser.h"
 
 #include <stdexcept>
 #include <string>
@@ -84,14 +85,17 @@ private:
      */
     void registerLogComponents(ptree& pt) const
     {
-        LogLevelFactory& logLevelFactory = IoC::Inject<LogLevelFactory>();
-        BOOST_FOREACH(ptree::value_type &v, pt.get_child("configuration.logging.components"))
+        if (ConfigurationParser::hasChilds(pt, "configuration.logging.components"))
         {
-            std::string componentName = v.second.get<std::string>("name");
-            std::string componentLevel = v.second.get<std::string>("level");
-            std::auto_ptr<LogLevel> level(logLevelFactory.create(componentLevel));
+            LogLevelFactory& logLevelFactory = IoC::Inject<LogLevelFactory>();
+            BOOST_FOREACH(ptree::value_type &v, pt.get_child("configuration.logging.components"))
+            {
+                std::string componentName = v.second.get<std::string>("name");
+                std::string componentLevel = v.second.get<std::string>("level");
+                std::auto_ptr<LogLevel> level(logLevelFactory.create(componentLevel));
 
-            LoggerHolder::RegisterLogComponent(componentName, *level);
+                LoggerHolder::RegisterLogComponent(componentName, *level);
+            }
         }
     }
 
@@ -101,16 +105,19 @@ private:
      */
     void registerLoggers(ptree& pt) const
     {
-        LoggerFactory& loggerFactory = IoC::Inject<LoggerFactory>();
-        BOOST_FOREACH(ptree::value_type &v, pt.get_child("configuration.logging.loggers"))
+        if (ConfigurationParser::hasChilds(pt, "configuration.logging.loggers"))
         {
-            std::string loggerType = v.second.get<std::string>("type");
-            std::string loggerParam;
-            if (loggerType == "file")
+            LoggerFactory& loggerFactory = IoC::Inject<LoggerFactory>();
+            BOOST_FOREACH(ptree::value_type &v, pt.get_child("configuration.logging.loggers"))
             {
-                loggerParam = v.second.get<std::string>("file-name");
+                std::string loggerType = v.second.get<std::string>("type");
+                std::string loggerParam;
+                if (loggerType == "file")
+                {
+                    loggerParam = v.second.get<std::string>("file-name");
+                }
+                LoggerHolder::RegisterLogger(loggerFactory.create(loggerType, loggerParam));
             }
-            LoggerHolder::RegisterLogger(loggerFactory.create(loggerType, loggerParam));
         }
     }
 

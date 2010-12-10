@@ -10,8 +10,6 @@
                 <level>error</level>
             </component>
         </components>
-        <loggers>
-        </loggers>
     </logging>
 </configuration>
 

@@ -19,8 +19,8 @@
 ===============================================================================
 */
 #pragma once
-#ifndef _SIG_HANDLER_H_
-#define _SIG_HANDLER_H_
+#ifndef _SIGNAL_HANDLER_H_
+#define _SIGNAL_HANDLER_H_
 
 #include <stdio.h>
 #include <execinfo.h>

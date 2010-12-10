@@ -22,7 +22,7 @@
 #include "main-impl.h"
 #include "internationalization.h"
 #include "logging.h"
-#include "sig-handler.h"
+#include "signal-handler.h"
 
 #include <iostream>
 #include <sstream>

@@ -18,10 +18,14 @@
     along with CPP_APP_TEMPLATE.  If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 */
-#include "main-impl.h"
-#include "application.h"
+#pragma once
+#ifndef _APPLICATION_H_
+#define _APPLICATION_H_
 
-int main(int argc, char** argv)
-{
-    return mainImpl(argc, argv, applicationMain);
-}
+/**
+ * Main application code.
+ * @return 0 if success, or != if an error occurs.
+ */
+int applicationMain();
+
+#endif

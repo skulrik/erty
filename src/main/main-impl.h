@@ -22,10 +22,17 @@
 #ifndef _MAIN_IMPL_H_
 #define _MAIN_IMPL_H_
 
-/** Define the mail application logging component. */
-#define LOG_MAIN_COMPONENT "main"
+#include <boost/function.hpp>
 
-/** Main application method. */
-int mainImpl(int argc, char** argv);
+/**
+ * Main application method caller.
+ * Initialize the application based on the command line parameters it receive,
+ * then call the applicationMain method.
+ * @param argc the number of command line parameters.
+ * @param argv the command line parameters.
+ * @param applicationMain the main application code to run.
+ * @return the return value of the applicationMain method.
+ */
+int mainImpl(int argc, char** argv, boost::function<int ()> applicationMain);
 
 #endif

@@ -26,8 +26,9 @@
 
 #include <iostream>
 #include <exception>
+#include <boost/function.hpp>
 
-int mainImpl(int argc, char** argv)
+int mainImpl(int argc, char** argv, boost::function<int ()> applicationMain)
 {
     int result = EXIT_SUCCESS;
     try
@@ -55,20 +56,20 @@ int mainImpl(int argc, char** argv)
         // Execute the main application code
         if (result != EXIT_FAILURE)
         {
-            INFO_LOG(LOG_MAIN_COMPONENT,"Startup");
-            std::cout << _("Hello, World!") << std::endl;
-            INFO_LOG(LOG_MAIN_COMPONENT,"Shutdown");
+            result = applicationMain();
         }
     }
     catch (std::exception& e)
     {
-        ERROR_LOG(LOG_MAIN_COMPONENT,e.what());
+        ERROR_LOG("",e.what());
+        std::cerr << e.what() << std::endl;
         result = EXIT_FAILURE;
     }
 
     if (result == EXIT_FAILURE)
     {
-        ERROR_LOG(LOG_MAIN_COMPONENT,"Failure");
+        std::cerr << "Failure" << std::endl;
+        ERROR_LOG("","Failure");
     }
 
     return result;

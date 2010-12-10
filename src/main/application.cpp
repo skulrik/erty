@@ -18,10 +18,18 @@
     along with CPP_APP_TEMPLATE.  If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 */
-#include "main-impl.h"
 #include "application.h"
+#include "logging.h"
+#include <iostream>
+#include "internationalization.h"
 
-int main(int argc, char** argv)
+/** Define the mail application logging component. */
+#define LOG_MAIN_COMPONENT "main"
+
+int applicationMain()
 {
-    return mainImpl(argc, argv, applicationMain);
+    INFO_LOG(LOG_MAIN_COMPONENT,"Startup");
+    std::cout << _("Hello, World!") << std::endl;
+    INFO_LOG(LOG_MAIN_COMPONENT,"Shutdown");
+    return EXIT_SUCCESS;
 }

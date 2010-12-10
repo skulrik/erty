@@ -61,9 +61,25 @@ protected:
     std::stringstream *stream;
 };
 
+inline int successMain()
+{
+    return EXIT_SUCCESS;
+}
+
+inline int failedMain()
+{
+    return EXIT_FAILURE;
+}
+
+inline int helloMain()
+{
+    std::cout << _("Hello, World!") << std::endl;
+    return EXIT_SUCCESS;
+}
+
 TEST_F(MainImplTest, ExtractedFunctionReturnsZeroUponSuccess)
 {
-    int result = mainImpl(0, 0);
+    int result = mainImpl(0, 0, successMain);
     ASSERT_EQ(0, result);
 }
 
@@ -72,21 +88,21 @@ TEST_F(MainImplTest, CorrectOuputPutToCout)
     std::stringstream expected;
     expected << _("Hello, World!") << std::endl;
     const char* cmdLine[] = { "APP_NAME", "--config-file=resources/test-data/logging-no-logger-no-component.xml" };
-    mainImpl(2, (char**)cmdLine);
+    mainImpl(2, (char**)cmdLine, helloMain);
     ASSERT_EQ(expected.str(), stream->str());
 }
 
 TEST_F(MainImplTest, ExtractedFunctionReturnsOneUponHelpModeAsked)
 {
     const char* cmdLine[] = { "APP_NAME", "--help" };
-    int result = mainImpl(2, (char**)cmdLine);
+    int result = mainImpl(2, (char**)cmdLine, successMain);
     ASSERT_EQ(1, result);
 }
 
 TEST_F(MainImplTest, ExtractedFunctionReturnsOneWhenAnInvalidParameterIsPassed)
 {
     const char* cmdLine[] = { "APP_NAME", "--invalid" };
-    int result = mainImpl(2, (char**)cmdLine);
+    int result = mainImpl(2, (char**)cmdLine, successMain);
     ASSERT_EQ(1, result);
 }
 

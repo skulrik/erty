@@ -65,7 +65,7 @@ public:
 
     /**
      * Return the path to the configuration file, specified with the --config-file option.
-     * @return the configuration file path (default to conf/logging.xml.
+     * @return the configuration file path (default to conf/config.xml.
      */
     std::string getConfigFilePath();
 

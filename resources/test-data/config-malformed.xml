@@ -1,0 +1,16 @@
+<configuration>
+    <logging>
+        <components
+            <component>
+                <name>main</name>
+                <level>info</level>
+            </component>
+        </components>
+        <loggers>
+            <logger>
+                <type>console</type>
+            </logger>
+        </loggers>
+    </logging>
+</configuration>
+

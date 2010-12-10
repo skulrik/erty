@@ -85,7 +85,7 @@ private:
     void registerLogComponents(ptree& pt) const
     {
         LogLevelFactory& logLevelFactory = IoC::Inject<LogLevelFactory>();
-        BOOST_FOREACH(ptree::value_type &v, pt.get_child("logging.components"))
+        BOOST_FOREACH(ptree::value_type &v, pt.get_child("configuration.logging.components"))
         {
             std::string componentName = v.second.get<std::string>("name");
             std::string componentLevel = v.second.get<std::string>("level");
@@ -102,7 +102,7 @@ private:
     void registerLoggers(ptree& pt) const
     {
         LoggerFactory& loggerFactory = IoC::Inject<LoggerFactory>();
-        BOOST_FOREACH(ptree::value_type &v, pt.get_child("logging.loggers"))
+        BOOST_FOREACH(ptree::value_type &v, pt.get_child("configuration.logging.loggers"))
         {
             std::string loggerType = v.second.get<std::string>("type");
             std::string loggerParam;

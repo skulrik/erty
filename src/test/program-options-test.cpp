@@ -59,7 +59,7 @@ TEST(ProgramOptionsTest, TestThatSpecifyNoConfigFileReturnTheDefaultValue)
 {
     const char* cmdLine[] = { "APP_NAME" };
     ProgramOptions programOptions(1, (char**)cmdLine);
-    ASSERT_EQ(programOptions.getConfigFilePath(), "conf/logging.xml");
+    ASSERT_EQ(programOptions.getConfigFilePath(), "conf/config.xml");
 }
 
 TEST(ProgramOptionsTest, TestThatSpecifyLongConfigFileOptionReturnTheSpecifiedValue)

@@ -29,7 +29,7 @@ ProgramOptions::ProgramOptions(int argc, char** argv) :
 {
     _desc.add_options()
     ("help,h", _("Display this message"))
-    ("config-file,c", po::value<std::string>()->default_value("conf/logging.xml"), "Configuration file path");
+    ("config-file,c", po::value<std::string>()->default_value("conf/config.xml"), "Configuration file path");
 
     try
     {

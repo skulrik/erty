@@ -1,0 +1,16 @@
+<configuration>
+    <logging>
+        <components>
+        </components>
+        <loggers>
+            <logger>
+                <type>console</type>
+            </logger>
+            <logger>
+                <type>file</type>
+                <file-name>output.log</file-name>
+            </logger>
+        </loggers>
+    </logging>
+</configuration>
+

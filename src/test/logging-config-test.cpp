@@ -71,18 +71,18 @@ protected:
 
 TEST_F(LoggingConfTest, TestNonExistingConfigFileThrowLoggingConfException)
 {
-    ASSERT_THROW(loggingConf.load("resources/test-data/logging-inexisting.xml"), LoggingConfException);
+    ASSERT_THROW(loggingConf.load("resources/test-data/config-inexisting.xml"), LoggingConfException);
 }
 
 TEST_F(LoggingConfTest, TestMalformedConfigFileThrowLoggingConfException)
 {
-    ASSERT_THROW(loggingConf.load("resources/test-data/logging-malformed.xml"), LoggingConfException);
+    ASSERT_THROW(loggingConf.load("resources/test-data/config-malformed.xml"), LoggingConfException);
 }
 
 TEST_F(LoggingConfTest, TestLoadingOneComponentRegisterOneComponent)
 {
     EXPECT_CALL(*logLevelFactoryMock, create(_)).Times(1).WillOnce(Return(new Info()));
-    loggingConf.load("resources/test-data/logging-one-component.xml");
+    loggingConf.load("resources/test-data/config-one-component.xml");
 }
 
 TEST_F(LoggingConfTest, TestLoadingTwoComponentRegisterTwoComponent)
@@ -91,19 +91,19 @@ TEST_F(LoggingConfTest, TestLoadingTwoComponentRegisterTwoComponent)
     .Times(2)
     .WillOnce(Return(new Info()))
     .WillOnce(Return(new Info()));
-    loggingConf.load("resources/test-data/logging-two-component.xml");
+    loggingConf.load("resources/test-data/config-two-component.xml");
 }
 
 TEST_F(LoggingConfTest, TestLoadingOneLoggerRegisterOneLogger)
 {
     EXPECT_CALL(*loggerFactoryMock, create("console",_)).Times(1).WillOnce(Return(new ConsoleLogger()));
-    loggingConf.load("resources/test-data/logging-one-logger.xml");
+    loggingConf.load("resources/test-data/config-one-logger.xml");
 }
 
 TEST_F(LoggingConfTest, TestLoadingTwoLoggerRegisterTwoLogger)
 {
     EXPECT_CALL(*loggerFactoryMock, create("console",_)).Times(1).WillOnce(Return(new ConsoleLogger()));
     EXPECT_CALL(*loggerFactoryMock, create("file","output.log")).Times(1).WillOnce(Return(new FileLogger("output.log")));
-    loggingConf.load("resources/test-data/logging-two-logger.xml");
+    loggingConf.load("resources/test-data/config-two-logger.xml");
 }
 

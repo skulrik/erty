@@ -87,7 +87,7 @@ TEST_F(MainImplTest, CorrectOuputPutToCout)
 {
     std::stringstream expected;
     expected << _("Hello, World!") << std::endl;
-    const char* cmdLine[] = { "APP_NAME", "--config-file=resources/test-data/logging-no-logger-no-component.xml" };
+    const char* cmdLine[] = { "APP_NAME", "--config-file=resources/test-data/config-no-logger-no-component.xml" };
     mainImpl(2, (char**)cmdLine, helloMain);
     ASSERT_EQ(expected.str(), stream->str());
 }

@@ -60,7 +60,9 @@ report: clean init
 	make "DEBUG=1" "PROFILE=1" lcov
 	make ctags
 	make doxygen
+	make clean.build
 	make test
+	make clean.build
 	make "DEBUG=1" valgrind
 	make cccc
 	make ccm
@@ -110,7 +112,7 @@ compile.test: $(TEST_OBJECTS)
 link.test:
 	$(CXX) $(TEST_OBJECTS) $(CXXLIBS) -L/usr/local/lib -lpthread -lgtest -lgmock -o $(TEST_EXEC_APP)
 
-test:	clean.build build.test
+test:	build.test
 	mkdir -p $(REPORT_DIR)/test
 	$(TEST_EXEC_APP) --gtest_shuffle --gtest_output=xml:$(REPORT_DIR)/test/$(PROJECT_NAME)_TEST.xml
 	cp -f $(REPORT_TOOLS_DIR)/gtest.xsl $(REPORT_DIR)/test/

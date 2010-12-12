@@ -1,3 +1,2 @@
 - Thread-Safe IoC singleton.
-- Logging : on startup, load the logging config file (path from command line parameter?) default to ConsoleLogger if error occurs.
 - Build it as a library, and find it a cool name :)

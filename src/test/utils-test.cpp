@@ -41,3 +41,37 @@ TEST(UtilsTest, TestThatToUpperReturnAnUppercaseVersionOfALowercaseString)
     ASSERT_EQ(toUpper("hello"), "HELLO");
 }
 
+TEST(UtilsTest, TestStringToBoolTrueValues)
+{
+    ASSERT_TRUE(stringToBool("true"));
+    ASSERT_TRUE(stringToBool("t"));
+    ASSERT_TRUE(stringToBool("y"));
+    ASSERT_TRUE(stringToBool("yes"));
+    ASSERT_TRUE(stringToBool("on"));
+
+    ASSERT_TRUE(stringToBool("TRUE"));
+    ASSERT_TRUE(stringToBool("T"));
+    ASSERT_TRUE(stringToBool("Y"));
+    ASSERT_TRUE(stringToBool("YES"));
+    ASSERT_TRUE(stringToBool("ON"));
+}
+
+TEST(UtilsTest, TestStringToBoolFalseValues)
+{
+    ASSERT_FALSE(stringToBool("false"));
+    ASSERT_FALSE(stringToBool("f"));
+    ASSERT_FALSE(stringToBool("n"));
+    ASSERT_FALSE(stringToBool("no"));
+    ASSERT_FALSE(stringToBool("off"));
+
+    ASSERT_FALSE(stringToBool("FALSE"));
+    ASSERT_FALSE(stringToBool("F"));
+    ASSERT_FALSE(stringToBool("N"));
+    ASSERT_FALSE(stringToBool("NO"));
+    ASSERT_FALSE(stringToBool("OFF"));
+}
+
+TEST(UtilsTest, TestThatPassingAnInvalidToStringToBoolThrow)
+{
+    EXPECT_THROW(stringToBool("invalid"), std::runtime_error);
+}

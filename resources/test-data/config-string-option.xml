@@ -1,0 +1,11 @@
+<configuration>
+    <options>
+        <option>
+            <name>string-option</name>
+            <description>string option</description>
+            <type>string</type>
+            <value>abcdefg</value>
+        </option>
+    </options>
+</configuration>
+

@@ -1,4 +1,4 @@
 - Thread-Safe IoC singleton.
 - Logging : on startup, load the logging config file (path from command line parameter?) default to ConsoleLogger if error occurs.
-- Config : Put command line parameter definition in the configuration file.
 - Build it as a library, and find it a cool name :)
+- Build : make test should not always run clean trhe build... make running test longer.

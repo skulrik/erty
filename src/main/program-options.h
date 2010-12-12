@@ -44,14 +44,39 @@ public:
 };
 
 /**
+ * Exception thrown when an error while parsing the configured options.
+ */
+class ConfiguredOptionParsingException : public std::runtime_error
+{
+public:
+    /**
+     * Create a new ConfiguredOptionParsingException with a specific message.
+     * @param message the exception message.
+     */
+    ConfiguredOptionParsingException(const char* message) :
+        std::runtime_error((_F("ConfiguredOptionParsingException: %1%") % message).str()) {}
+};
+
+/**
+ * Helper function that retrieve an option from a variable map.
+ * @param vm the variable map.
+ * @param optionName the name of the option.
+ * @tparam the option type.
+ * @return the option value.
+ */
+template <class T>
+T getOptionValue(const po::variables_map& vm, const std::string& optionName);
+
+/**
  * Class that manage all programs options.
+ * Some options are hard coded, and users can defined other in the configuration file.
  */
 class ProgramOptions
 {
 public:
     /**
      * Create a new programs options manager class, by specifying command line arguments.
-     * @param argc The number of command line arguments
+     * @param argc The number of command line arguments.
      * @param argv The list of command line arguments.
      * @throw InvalidOptionException
      */
@@ -75,7 +100,49 @@ public:
      */
     std::string getUsage();
 
+    /**
+     * Return the value of for an option.
+     * @param optionName the name op the option.
+     * @tparam T the type of the option.
+     * @return the value of the option.
+     */
+    template<class T>
+    T get(const std::string& optionName)
+    {
+        return getOptionValue<T>(_vm, optionName);
+    }
+
 private:
+
+    /**
+     * Load the hard coded options.
+     */
+    void loadPreDefinedOptions();
+
+    /**
+     * Load the user configured options from the configuration file.
+     * @throw ConfiguredOptionParsingException
+     */
+    void loadConfiguredOptions();
+
+    /**
+     * Add an available option.
+     * @param name the option name.
+     * @param desc the option description.
+     * @param type the option type.
+     * @param value the option value,
+     */
+    void addOption(const std::string& name, const std::string& desc, const std::string& type, const std::string& value);
+
+    /**
+     * Apply the command line parameters the the variable map.
+     * @param argc The number of command line arguments.
+     * @param argv The list of command line arguments.
+     * @param vm the variable map.
+     * @param allowUnknoww indicate if command line parameter not defined are allowed.
+     */
+    void applyCommandLineValues(int argc, char** argv, po::variables_map& vm, bool allowUnknown);
+
     /** All the available options. */
     po::options_description _desc;
 

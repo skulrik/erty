@@ -64,22 +64,77 @@ TEST(ProgramOptionsTest, TestThatSpecifyNoConfigFileReturnTheDefaultValue)
 
 TEST(ProgramOptionsTest, TestThatSpecifyLongConfigFileOptionReturnTheSpecifiedValue)
 {
-    const char* cmdLine[] = { "APP_NAME", "--config-file=test" };
+    const char* cmdLine[] = { "APP_NAME", "--config-file=resources/test-data/config.xml" };
     ProgramOptions programOptions(2, (char**)cmdLine);
-    ASSERT_EQ("test", programOptions.getConfigFilePath());
+    ASSERT_EQ("resources/test-data/config.xml", programOptions.getConfigFilePath());
 }
 
 TEST(ProgramOptionsTest, TestThatSpecifyShortConfigFileOptionReturnTheSpecifiedValue)
 {
-    const char* cmdLine[] = { "APP_NAME", "-ctest" };
+    const char* cmdLine[] = { "APP_NAME", "-cresources/test-data/config.xml" };
     ProgramOptions programOptions(2, (char**)cmdLine);
-    ASSERT_EQ("test", programOptions.getConfigFilePath());
+    ASSERT_EQ("resources/test-data/config.xml", programOptions.getConfigFilePath());
 }
 
 TEST(ProgramOptionsTest, TestThatSpecifyShortConfigFileOptionWithSpaceReturnTheSpecifiedValue)
 {
-    const char* cmdLine[] = { "APP_NAME", "-c", "test" };
+    const char* cmdLine[] = { "APP_NAME", "-c", "resources/test-data/config.xml" };
     ProgramOptions programOptions(3, (char**)cmdLine);
-    ASSERT_EQ("test", programOptions.getConfigFilePath());
+    ASSERT_EQ("resources/test-data/config.xml", programOptions.getConfigFilePath());
+}
+
+TEST(ProgramOptionsTest, TestThatSpecifyAnInvalidConfigurationFileThrowAnConfiguredOptionParsingException)
+{
+    const char* cmdLine[] = { "APP_NAME", "--config-file=inexisting-file.xml" };
+    EXPECT_THROW(ProgramOptions programOptions(2, (char**)cmdLine), ConfiguredOptionParsingException);
+}
+
+TEST(ProgramOptionsTest, TestThatWhenSpecifyFalseBooleanOptionFromConfigFileWithNoValueInCommandLineNoValueReturnFalse)
+{
+    const char* cmdLine[] = { "APP_NAME", "-cresources/test-data/config-false-boolean-option.xml" };
+    ProgramOptions programOptions(2, (char**)cmdLine);
+    ASSERT_EQ(false, programOptions.get<bool>("boolean-option"));
+}
+
+TEST(ProgramOptionsTest, TestThatWhenSpecifyFalseBooleanOptionFromConfigFileWithTrueValueInCommandLineNoValueReturnTrue)
+{
+    const char* cmdLine[] = { "APP_NAME", "-cresources/test-data/config-false-boolean-option.xml", "--boolean-option" };
+    ProgramOptions programOptions(3, (char**)cmdLine);
+    ASSERT_EQ(true, programOptions.get<bool>("boolean-option"));
+}
+
+TEST(ProgramOptionsTest, TestThatWhenSpecifyFalseBooleanOptionFromConfigFileWithNoValueInCommandLineNoValueReturnTrue)
+{
+    const char* cmdLine[] = { "APP_NAME", "-cresources/test-data/config-true-boolean-option.xml" };
+    ProgramOptions programOptions(2, (char**)cmdLine);
+    ASSERT_EQ(true, programOptions.get<bool>("boolean-option"));
+}
+
+TEST(ProgramOptionsTest, TestThatWhenSpecifyStringOptionFromConfigFileWithNoValueInCommandLineNoValueReturnConfigFileValue)
+{
+    const char* cmdLine[] = { "APP_NAME", "-cresources/test-data/config-string-option.xml" };
+    ProgramOptions programOptions(2, (char**)cmdLine);
+    ASSERT_EQ("abcdefg", programOptions.get<std::string>("string-option"));
+}
+
+TEST(ProgramOptionsTest, TestThatWhenSpecifyStringOptionFromConfigFileWithStringValueInCommandLineNoValueReturnCommandLineValue)
+{
+    const char* cmdLine[] = { "APP_NAME", "-cresources/test-data/config-string-option.xml", "--string-option=hijklmnop" };
+    ProgramOptions programOptions(3, (char**)cmdLine);
+    ASSERT_EQ("hijklmnop", programOptions.get<std::string>("string-option"));
+}
+
+TEST(ProgramOptionsTest, TestThatWhenSpecifyIntegerOptionFromConfigFileWithNoValueInCommandLineNoValueReturnConfigFileValue)
+{
+    const char* cmdLine[] = { "APP_NAME", "-cresources/test-data/config-integer-option.xml" };
+    ProgramOptions programOptions(2, (char**)cmdLine);
+    ASSERT_EQ(10, programOptions.get<int>("integer-option"));
+}
+
+TEST(ProgramOptionsTest, TestThatWhenSpecifyIntegerOptionFromConfigFileWithIntegerValueInCommandLineNoValueReturnCommandLineValue)
+{
+    const char* cmdLine[] = { "APP_NAME", "-cresources/test-data/config-integer-option.xml", "--integer-option=20" };
+    ProgramOptions programOptions(3, (char**)cmdLine);
+    ASSERT_EQ(20, programOptions.get<int>("integer-option"));
 }
 

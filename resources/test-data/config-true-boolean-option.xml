@@ -1,0 +1,11 @@
+<configuration>
+    <options>
+        <option>
+            <name>boolean-option</name>
+            <description>boolean option</description>
+            <type>boolean</type>
+            <value>true</value>
+        </option>
+    </options>
+</configuration>
+

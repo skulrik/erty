@@ -1,0 +1,11 @@
+<configuration>
+    <options>
+        <option>
+            <name>integer-option</name>
+            <description>integer option</description>
+            <type>integer</type>
+            <value>10</value>
+        </option>
+    </options>
+</configuration>
+

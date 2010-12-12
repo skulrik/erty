@@ -25,6 +25,7 @@
 #include "demangle.h"
 #include <string>
 #include <boost/algorithm/string.hpp>
+#include <boost/format.hpp>
 
 /**
  * Insert a copy constructor and a assignment operator that do nothing in a class.
@@ -75,12 +76,29 @@ inline std::string toLower(const std::string& str)
  * Return a uppercase version of a string.
  * @param str the string to uppercase.
  * @return the uppercase version of the string.
+ * @throw std::runtime_error
  */
 inline std::string toUpper(const std::string& str)
 {
     std::string upperStr = str;
     boost::to_upper(upperStr);
     return upperStr;
+}
+
+inline bool stringToBool(const std::string& value)
+{
+    std::string loweredValue = toLower(value);
+
+    if ((loweredValue == "true") || (loweredValue == "t") || (loweredValue == "y") || (loweredValue == "yes") || (loweredValue == "on"))
+    {
+        return true;
+    }
+    else if ((loweredValue == "false") || (loweredValue == "f") || (loweredValue == "n") || (loweredValue == "no") || (loweredValue == "off"))
+    {
+        return false;
+    }
+
+    throw std::runtime_error((_F("Cannot convert string %1% to bool value.") % value).str());
 }
 
 #endif

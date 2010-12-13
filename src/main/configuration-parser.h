@@ -59,7 +59,7 @@ public:
     /**
      * Check if a mutiple property is present in a property tree.
      * @param pt a property tree.
-     * @param childName the name of the property to check.
+     * @param childsName the name of the property to check.
      * @return true if the property is present, else false.
      */
     static bool hasChilds(ptree& pt, const std::string& childsName)

@@ -1,2 +1,5 @@
 - Thread-Safe IoC singleton.
 - Build it as a library, and find it a cool name :)
+- Config : extract all pt manipulation in ConfigurationParser class.
+- IoC : allow to register more than one object for a given type (with diffenent name)
+- IoC : Add autocreate option to injection.

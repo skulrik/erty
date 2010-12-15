@@ -57,3 +57,15 @@ TEST(IoCTest, IsRegisteredReturnFalseForATypeForWhichTheObjectHasBeenUnRegistere
     ASSERT_FALSE(IoC::IsRegistered<Impl>());
 }
 
+TEST(IoCTest, RegisteringTwoObjectOfTheSameTypeToDifferentNameReturnGoodObjectForEachName)
+{
+    Impl* implA = new Impl();
+    IoC::Register<Base>("impl-a", implA);
+
+    Impl* implB = new Impl();
+    IoC::Register<Base>("impl-b", implB);
+
+    ASSERT_EQ(implA, IoC::Resolve<Base>("impl-a"));
+    ASSERT_EQ(implB, IoC::Resolve<Base>("impl-b"));
+}
+

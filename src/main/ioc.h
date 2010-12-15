@@ -56,13 +56,25 @@ class IoC
 public:
     /**
      * Register an object pointer with it type name.
-     * @param objectPtr rTthe instance to register.
+     * @param objectPtr The instance to register.
      * @tparam T The object type.
      */
     template<class T>
     static void Register(T* objectPtr)
     {
-        _iocContainer[getTypeName<T>()] = boost::shared_ptr<void>(objectPtr);
+        Register<T>(getTypeName<T>(), objectPtr);
+    }
+
+    /**
+     * Register an object pointer to a specific name.
+     * @param name The name to which register the object.
+     * @param objectPtr The instance to register.
+     * @tparam T The object type.
+     */
+    template<class T>
+    static void Register(const std::string& name, T* objectPtr)
+    {
+        _iocContainer[name] = boost::shared_ptr<void>(objectPtr);
     }
 
     /**
@@ -73,7 +85,19 @@ public:
     template<class T>
     static T* Resolve()
     {
-        return (T*)(_iocContainer[getTypeName<T>()].get());
+        return Resolve<T>(getTypeName<T>());
+    }
+
+    /**
+     * Return an object pointer registred by its registered name.
+     * @param name The name to which register the object.
+     * @tparam T The object type.
+     * @return the registered object.
+     */
+    template<class T>
+    static T* Resolve(const std::string& name)
+    {
+        return (T*)(_iocContainer[name].get());
     }
 
     /**
@@ -84,7 +108,19 @@ public:
     template<class T>
     static bool IsRegistered()
     {
-        return (_iocContainer.find(getTypeName<T>()) != _iocContainer.end());
+        return IsRegistered<T>(getTypeName<T>());
+    }
+
+    /**
+     * Return true if an object is registered for a given name.
+     * @param name The name to which register the object.
+     * @tparam T The object type.
+     * @return true if an object is registered, else false.
+     */
+    template<class T>
+    static bool IsRegistered(const std::string& name)
+    {
+        return (_iocContainer.find(name) != _iocContainer.end());
     }
 
     /**
@@ -94,8 +130,19 @@ public:
     template<class T>
     static void UnRegister()
     {
-        Register<T>(0);
-        _iocContainer.erase(getTypeName<T>());
+        UnRegister<T>(getTypeName<T>());
+    }
+
+    /**
+     * Remove the registered object to a specific name.
+     * @param name The name to which register the object.
+     * @tparam T The object type.
+     */
+    template<class T>
+    static void UnRegister(const std::string& name)
+    {
+        Register<T>(name, 0);
+        _iocContainer.erase(name);
     }
 
     /**
@@ -107,16 +154,29 @@ public:
     template <class T>
     static T& Inject()
     {
+        return Inject<T>(getTypeName<T>());
+    }
+
+    /**
+     * Retrieve an object from the ioc container, to inject it in the current context.
+     * Create it if its not there.
+     * @param name The name to which register the object.
+     * @tparam T the type of the object to inject.
+     * @return the requested object.
+     */
+    template <class T>
+    static T& Inject(const std::string& name)
+    {
         T* object = 0;
 
-        if (IoC::IsRegistered<T>())
+        if (IoC::IsRegistered<T>(name))
         {
-            object = IoC::Resolve<T>();
+            object = IoC::Resolve<T>(name);
         }
         else
         {
             object = new T();
-            IoC::Register<T>(object);
+            IoC::Register<T>(name, object);
         }
 
         return *object;

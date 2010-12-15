@@ -147,25 +147,27 @@ public:
 
     /**
      * Retrieve an object from the ioc container, to inject it in the current context.
-     * Create it if its not there.
+     * @param autocreate will create the object if its not in the ioc container.
      * @tparam T the type of the object to inject.
      * @return the requested object.
+     * @throe IoCException
      */
     template <class T>
-    static T& Inject()
+    static T& Inject(bool autocreate = true)
     {
-        return Inject<T>(getTypeName<T>());
+        return Inject<T>(getTypeName<T>(), autocreate);
     }
 
     /**
      * Retrieve an object from the ioc container, to inject it in the current context.
-     * Create it if its not there.
      * @param name The name to which register the object.
+     * @param autocreate will create the object if its not in the ioc container.
      * @tparam T the type of the object to inject.
      * @return the requested object.
+     * @throe IoCException
      */
     template <class T>
-    static T& Inject(const std::string& name)
+    static T& Inject(const std::string& name, bool autocreate = true)
     {
         T* object = 0;
 
@@ -173,10 +175,15 @@ public:
         {
             object = IoC::Resolve<T>(name);
         }
-        else
+        else if (autocreate)
         {
             object = new T();
             IoC::Register<T>(name, object);
+        }
+
+        if (object == 0)
+        {
+            throw IoCException((_F("No object registered for type %1% with name %2%.") % getTypeName<T>() % name).str().c_str());
         }
 
         return *object;

@@ -1,4 +1,3 @@
 - Thread-Safe IoC singleton.
 - Build it as a library, and find it a cool name :)
 - Config : extract all pt manipulation in ConfigurationParser class.
-- IoC : Add autocreate option to injection.

@@ -69,3 +69,14 @@ TEST(IoCTest, RegisteringTwoObjectOfTheSameTypeToDifferentNameReturnGoodObjectFo
     ASSERT_EQ(implB, IoC::Resolve<Base>("impl-b"));
 }
 
+TEST(IoCTest, TestThatInjectingAnObjectWithAutocreateSetToTrueReturnAValidObject)
+{
+    Impl& impl = IoC::Inject<Impl>();
+    ASSERT_TRUE(0 != &impl);
+}
+
+TEST(IoCTest, TestThatInjectingAnObjectWithAutocreateSetToFalseThrow)
+{
+    ASSERT_THROW(IoC::Inject<Impl>(false), IoCException);
+}
+

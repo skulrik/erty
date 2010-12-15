@@ -23,6 +23,7 @@
 #include "internationalization.h"
 #include "program-options.h"
 #include "logging.h"
+#include "signal-handler.h"
 
 #include <iostream>
 #include <exception>
@@ -33,6 +34,9 @@ int mainImpl(int argc, char** argv, boost::function<int ()> applicationMain)
     int result = EXIT_SUCCESS;
     try
     {
+        // Set segmentation fault handler
+        signal(SIGSEGV, printStacktrace);
+
         // Set up locale using current LANG environment variable
         internationalize("CPP_APP_TEMPLATE", "/usr/share/locale");
 

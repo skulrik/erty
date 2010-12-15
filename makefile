@@ -30,12 +30,16 @@ ifdef LIBRARY
 endif
 
 SRC_DIR=src
-SRC_MAIN_DIR=${SRC_DIR}/main
-SRC_TEST_DIR=${SRC_DIR}/test
+MAIN_DIR=main
+LIB_DIR=lib
+TEST_DIR=test
+SRC_MAIN_DIR=${SRC_DIR}/$(MAIN_DIR)
+SRC_TEST_DIR=${SRC_DIR}/$(TEST_DIR)
 
 BUILD_DIR=build
-BUILD_MAIN_DIR=${BUILD_DIR}/main
-BUILD_TEST_DIR=${BUILD_DIR}/test
+BUILD_MAIN_DIR=${BUILD_DIR}/$(MAIN_DIR)
+BUILD_LIB_DIR=${BUILD_DIR}/$(LIB_DIR)
+BUILD_TEST_DIR=${BUILD_DIR}/$(TEST_DIR)
 
 RESOURCES_DIR=resources
 REPORT_TOOLS_DIR=$(RESOURCES_DIR)/report-tools
@@ -53,9 +57,9 @@ CSCOPE_FILES=cscope.*
 SRC_FILES=$(shell find $(SRC_DIR) -name *.cpp)
 SRC_FILES+=$(shell find $(SRC_DIR) -name *.h)
 ifdef LIBRARY
-  MAIN_OBJECTS=$(shell find $(SRC_MAIN_DIR) -name *.cpp |grep -v 'main.cpp' |sed 's/.cpp/.o/' |sed 's/$(SRC_DIR)/$(BUILD_DIR)/')
+  MAIN_OBJECTS=$(shell find $(SRC_MAIN_DIR) -name *.cpp |grep -v 'main.cpp' |sed 's/.cpp/.o/' |sed 's/$(SRC_DIR)/$(BUILD_DIR)/' |sed 's/$(MAIN_DIR)/$(LIB_DIR)/')
 else
-  MAIN_OBJECTS=$(shell find $(SRC_MAIN_DIR) -name *.cpp |sed 's/.cpp/.o/' |sed 's/$(SRC_DIR)/$(BUILD_DIR)/')
+  MAIN_OBJECTS=$(shell find $(SRC_MAIN_DIR) -name *.cpp |grep 'main.cpp' |sed 's/.cpp/.o/' |sed 's/$(SRC_DIR)/$(BUILD_DIR)/')
 endif
 TEST_OBJECTS=$(shell find $(SRC_DIR) -name *.cpp |grep -v 'main.cpp' |sed 's/.cpp/.o/' |sed 's/$(SRC_DIR)/$(BUILD_DIR)/')
 
@@ -86,6 +90,7 @@ clean.build:
 	rm -rf $(BUILD_DIR) $(BIN_DIR)
 init:
 	mkdir -p $(BUILD_MAIN_DIR)
+	mkdir -p $(BUILD_LIB_DIR)
 	mkdir -p $(BUILD_TEST_DIR)
 	mkdir -p $(REPORT_DIR)
 	mkdir -p $(BIN_DIR)
@@ -105,16 +110,16 @@ msgfmt:
 	mkdir -p $(LOCALES_DIR)/mo/fr
 	msgfmt --check --output $(LOCALES_DIR)/mo/fr/$(PROJECT_NAME).mo $(LOCALES_DIR)/po/fr.po
 
-build:	init compile link
+build:	init lib compile link
 	ln -sf ../$(MAIN_EXEC_APP) $(BIN_DIR)/$(PROJECT_NAME)
 
 compile: $(MAIN_OBJECTS)
 
 link:
-	$(CXX) $(MAIN_OBJECTS) $(CXXLIBS) -o $(MAIN_EXEC_APP)
+	$(CXX) $(MAIN_OBJECTS) $(CXXLIBS) -L$(BUILD_LIB_DIR) -l$(PROJECT_NAME) -o $(MAIN_EXEC_APP)
 
 run:	build
-	$(MAIN_EXEC_APP)
+	LD_LIBRARY_PATH=$(BUILD_LIB_DIR) $(MAIN_EXEC_APP)
 
 build.test: init compile.test link.test
 	ln -sf ../$(TEST_EXEC_APP) $(BIN_DIR)/$(PROJECT_NAME)_TEST
@@ -137,11 +142,11 @@ prod: clean
 	make "OPTIMIZE=1" build
 	make msgfmt
 
-lib: clean init
+lib: init
 	make "OPTIMIZE=1" "LIBRARY=1" compile
-	ld -G $(BUILD_MAIN_DIR)/*.o -o $(BUILD_MAIN_DIR)/lib$(PROJECT_NAME).so.$(MAJOR).$(MINOR).$(RELEASE)
-	ln -sf lib$(PROJECT_NAME).so.$(MAJOR).$(MINOR).$(RELEASE) $(BUILD_MAIN_DIR)/lib$(PROJECT_NAME).so.$(MAJOR)
-	ln -sf lib$(PROJECT_NAME).so.$(MAJOR) $(BUILD_MAIN_DIR)/lib$(PROJECT_NAME).so
+	$(CXX) $(CXXLIBS) -shared $(BUILD_LIB_DIR)/*.o -o $(BUILD_LIB_DIR)/lib$(PROJECT_NAME).so.$(MAJOR).$(MINOR).$(RELEASE)
+	ln -sf lib$(PROJECT_NAME).so.$(MAJOR).$(MINOR).$(RELEASE) $(BUILD_LIB_DIR)/lib$(PROJECT_NAME).so.$(MAJOR)
+	ln -sf lib$(PROJECT_NAME).so.$(MAJOR) $(BUILD_LIB_DIR)/lib$(PROJECT_NAME).so
 
 install:
 	cp -f bin/$(PROJECT_NAME) $(PREFIX)/
@@ -185,6 +190,9 @@ ccm:
 .PHONY:	default all report clean clean.build init ctags cscope xgettext msgfmt build compile link run build.test compile.test link.test test prod astyle valgrind doxygen lcov cccc ccm
 
 $(BUILD_MAIN_DIR)/%.o : $(SRC_MAIN_DIR)/%.cpp
+	$(CXX) -c $(CXXFLAGS) $(CXXINCLUDES) -o $@ $<
+
+$(BUILD_LIB_DIR)/%.o : $(SRC_MAIN_DIR)/%.cpp
 	$(CXX) -c $(CXXFLAGS) $(CXXINCLUDES) -o $@ $<
 
 $(BUILD_TEST_DIR)/%.o : $(SRC_TEST_DIR)/%.cpp

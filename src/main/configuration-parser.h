@@ -31,6 +31,19 @@
 using boost::property_tree::ptree;
 
 /**
+ * ConfigurationParser  method can throws exception of this kind.
+ */
+class ConfigurationParserException : public std::runtime_error
+{
+public:
+    /**
+     * Create a new ConfigurationParserException with a specific message.
+     * @param message the exception message.
+     */
+    ConfigurationParserException(const char* message) :
+        std::runtime_error((_F("ConfigurationParserException: %1%") % message).str()) {}
+};
+/**
  * Class that can browse a confuguraton property tree.
  */
 class ConfigurationParser
@@ -38,16 +51,39 @@ class ConfigurationParser
 public:
 
     /**
-     * Check if a single property is present in a property tree.
-     * @param pt a property tree.
-     * @param childName the name of the property to check.
-     * @return true if the property is present, else false.
+     * Default constructor.
      */
-    static bool hasChild(ptree& pt, const std::string& childName)
+    ConfigurationParser() : _pt()
+    {
+    }
+
+    /**
+     * Create a configuration parser by parsing a configuration file.
+     * @param fileName the configuration file name.
+     * @throw ConfigurationParserException
+     */
+    ConfigurationParser(const std::string& fileName) :_pt()
     {
         try
         {
-            pt.get(childName, "");
+            read_xml(fileName, _pt);
+        }
+        catch (std::exception& e)
+        {
+            throw ConfigurationParserException(e.what());
+        }
+    }
+
+    /**
+     * Check if a single property is present in the configuration.
+     * @param childName the name of the property to check.
+     * @return true if the property is present, else false.
+     */
+    bool hasChild(const std::string& childName)
+    {
+        try
+        {
+            _pt.get(childName, "");
             return true;
         }
         catch (std::exception& e)
@@ -57,16 +93,15 @@ public:
     }
 
     /**
-     * Check if a mutiple property is present in a property tree.
-     * @param pt a property tree.
+     * Check if a mutiple property is present in the configuration.
      * @param childsName the name of the property to check.
      * @return true if the property is present, else false.
      */
-    static bool hasChilds(ptree& pt, const std::string& childsName)
+    bool hasChilds(const std::string& childsName)
     {
         try
         {
-            pt.get_child(childsName);
+            _pt.get_child(childsName);
             return true;
         }
         catch (std::exception& e)
@@ -75,8 +110,20 @@ public:
         }
     }
 
+    /**
+     * Return the property tree for of the configuration.
+     * @return the configuration property tree.
+     */
+    ptree& getPT()
+    {
+        return _pt;
+    }
+
 private:
-    DISALLOW_DEFAULT_COPY_AND_ASSIGN(ConfigurationParser);
+    /** The configuration property tree. */
+    ptree _pt;
+
+    DISALLOW_COPY_AND_ASSIGN(ConfigurationParser);
 };
 
 #endif

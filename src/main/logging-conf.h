@@ -58,37 +58,26 @@ class LoggingConf
 public:
 
     /**
-     * Create logging setup by parsing a logging configuration file.
-     * @param fileName the logging configuration file name.
+     * Setup the logging environment from the current configuration.
      */
-    virtual void load(const std::string& fileName) const
+    void setup()
     {
-        ptree pt;
-
-        try
-        {
-            read_xml(fileName, pt);
-            registerLogComponents(pt);
-            registerLoggers(pt);
-        }
-        catch (std::exception& e)
-        {
-            throw LoggingConfException(e.what());
-        }
+        registerLogComponents();
+        registerLoggers();
     }
 
 private:
 
     /**
-     * Parse the components node of the property tree, to register logging components.
-     * @param pt the property tree
+     * Parse the components node of the configuration, to register logging components.
      */
-    void registerLogComponents(ptree& pt) const
+    void registerLogComponents() const
     {
-        if (ConfigurationParser::hasChilds(pt, "configuration.logging.components"))
+        ConfigurationParser& config = IoC::Inject<ConfigurationParser>(false);
+        if (config.hasChilds("configuration.logging.components"))
         {
             LogLevelFactory& logLevelFactory = IoC::Inject<LogLevelFactory>();
-            BOOST_FOREACH(ptree::value_type &v, pt.get_child("configuration.logging.components"))
+            BOOST_FOREACH(ptree::value_type &v, config.getPT().get_child("configuration.logging.components"))
             {
                 std::string componentName = v.second.get<std::string>("name");
                 std::string componentLevel = v.second.get<std::string>("level");
@@ -100,15 +89,15 @@ private:
     }
 
     /**
-     * Parse the loggers node of the property tree, to register loggers.
-     * @param pt the property tree
+     * Parse the loggers node of the configuration, to register loggers.
      */
-    void registerLoggers(ptree& pt) const
+    void registerLoggers() const
     {
-        if (ConfigurationParser::hasChilds(pt, "configuration.logging.loggers"))
+        ConfigurationParser& config = IoC::Inject<ConfigurationParser>(false);
+        if (config.hasChilds("configuration.logging.loggers"))
         {
             LoggerFactory& loggerFactory = IoC::Inject<LoggerFactory>();
-            BOOST_FOREACH(ptree::value_type &v, pt.get_child("configuration.logging.loggers"))
+            BOOST_FOREACH(ptree::value_type &v, config.getPT().get_child("configuration.logging.loggers"))
             {
                 std::string loggerType = v.second.get<std::string>("type");
                 std::string loggerParam;

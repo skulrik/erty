@@ -146,6 +146,14 @@ public:
     }
 
     /**
+     * Unregister all objects present in the ioc container.
+     */
+    static void UnRegisterAll()
+    {
+        _iocContainer.clear();
+    }
+
+    /**
      * Retrieve an object from the ioc container, to inject it in the current context.
      * @param autocreate will create the object if its not in the ioc container.
      * @tparam T the type of the object to inject.

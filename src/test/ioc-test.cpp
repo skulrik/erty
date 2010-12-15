@@ -24,7 +24,22 @@
 struct Base {};
 struct Impl : public Base {};
 
-TEST(IoCTest, IsRegisteredReturnTrueForATypeWithARegisteredObject)
+class IoCTest : public ::testing::Test
+{
+protected:
+
+    virtual void SetUp()
+    {
+        IoC::UnRegisterAll();
+    }
+
+    virtual void TearDown()
+    {
+        IoC::UnRegisterAll();
+    }
+};
+
+TEST_F(IoCTest, IsRegisteredReturnTrueForATypeWithARegisteredObject)
 {
     Impl* impl = new Impl();
     IoC::Register<Base>(impl);
@@ -32,7 +47,7 @@ TEST(IoCTest, IsRegisteredReturnTrueForATypeWithARegisteredObject)
     ASSERT_TRUE(IoC::IsRegistered<Base>());
 }
 
-TEST(IoCTest, IsRegisteredReturnTrueForATypeWithNoRegisteredObject)
+TEST_F(IoCTest, IsRegisteredReturnTrueForATypeWithNoRegisteredObject)
 {
     Impl* impl = new Impl();
     IoC::Register<Base>(impl);
@@ -40,7 +55,7 @@ TEST(IoCTest, IsRegisteredReturnTrueForATypeWithNoRegisteredObject)
     ASSERT_FALSE(IoC::IsRegistered<Impl>());
 }
 
-TEST(IoCTest, ResolveReturnWhatRegisterHasSaved)
+TEST_F(IoCTest, ResolveReturnWhatRegisterHasSaved)
 {
     Impl* impl = new Impl();
     IoC::Register<Base>(impl);
@@ -48,7 +63,7 @@ TEST(IoCTest, ResolveReturnWhatRegisterHasSaved)
     ASSERT_EQ(impl, IoC::Resolve<Base>());
 }
 
-TEST(IoCTest, IsRegisteredReturnFalseForATypeForWhichTheObjectHasBeenUnRegistered)
+TEST_F(IoCTest, IsRegisteredReturnFalseForATypeForWhichTheObjectHasBeenUnRegistered)
 {
     Impl* impl = new Impl();
     IoC::Register<Base>(impl);
@@ -57,7 +72,7 @@ TEST(IoCTest, IsRegisteredReturnFalseForATypeForWhichTheObjectHasBeenUnRegistere
     ASSERT_FALSE(IoC::IsRegistered<Impl>());
 }
 
-TEST(IoCTest, RegisteringTwoObjectOfTheSameTypeToDifferentNameReturnGoodObjectForEachName)
+TEST_F(IoCTest, RegisteringTwoObjectOfTheSameTypeToDifferentNameReturnGoodObjectForEachName)
 {
     Impl* implA = new Impl();
     IoC::Register<Base>("impl-a", implA);
@@ -69,13 +84,13 @@ TEST(IoCTest, RegisteringTwoObjectOfTheSameTypeToDifferentNameReturnGoodObjectFo
     ASSERT_EQ(implB, IoC::Resolve<Base>("impl-b"));
 }
 
-TEST(IoCTest, TestThatInjectingAnObjectWithAutocreateSetToTrueReturnAValidObject)
+TEST_F(IoCTest, TestThatInjectingAnObjectWithAutocreateSetToTrueReturnAValidObject)
 {
     Impl& impl = IoC::Inject<Impl>();
     ASSERT_TRUE(0 != &impl);
 }
 
-TEST(IoCTest, TestThatInjectingAnObjectWithAutocreateSetToFalseThrow)
+TEST_F(IoCTest, TestThatInjectingAnObjectWithAutocreateSetToFalseThrow)
 {
     ASSERT_THROW(IoC::Inject<Impl>(false), IoCException);
 }

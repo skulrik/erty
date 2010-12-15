@@ -21,6 +21,7 @@
 #include "program-options.h"
 #include "internationalization.h"
 #include "configuration-parser.h"
+#include "ioc.h"
 
 #include <sstream>
 #include <exception>
@@ -80,10 +81,11 @@ void ProgramOptions::loadConfiguredOptions()
     try
     {
         std::string configFileName = getConfigFilePath();
-        read_xml(configFileName, pt);
-        if (ConfigurationParser::hasChilds(pt, "configuration.options"))
+        ConfigurationParser* config = new ConfigurationParser(configFileName);
+        IoC::Register<ConfigurationParser>(config);
+        if (config->hasChilds("configuration.options"))
         {
-            BOOST_FOREACH(ptree::value_type &v, pt.get_child("configuration.options"))
+            BOOST_FOREACH(ptree::value_type &v, config->getPT().get_child("configuration.options"))
             {
                 std::string optionName = v.second.get<std::string>("name");
                 std::string optionDesc = v.second.get<std::string>("description");

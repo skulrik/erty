@@ -47,11 +47,8 @@ int mainImpl(int argc, char** argv, boost::function<int ()> applicationMain)
             result = EXIT_FAILURE;
         }
 
-        // Get the configuration file path
-        std::string configFile = programOptions->getConfigFilePath();
-
         // Set up the logging environment
-        LoggingConf().load(configFile);
+        LoggingConf().setup();
 
         // Execute the main application code
         if (result != EXIT_FAILURE)

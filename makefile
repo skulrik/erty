@@ -21,6 +21,14 @@ ifdef PROFILE
   CXXLIBS+= -lgcov
 endif
 
+MAJOR=0
+MINOR=1
+RELEASE=0
+
+ifdef LIBRARY
+  CXXFLAGS+= -fPIC
+endif
+
 SRC_DIR=src
 SRC_MAIN_DIR=${SRC_DIR}/main
 SRC_TEST_DIR=${SRC_DIR}/test
@@ -44,7 +52,11 @@ CSCOPE_FILES=cscope.*
 
 SRC_FILES=$(shell find $(SRC_DIR) -name *.cpp)
 SRC_FILES+=$(shell find $(SRC_DIR) -name *.h)
-MAIN_OBJECTS=$(shell find $(SRC_MAIN_DIR) -name *.cpp |sed 's/.cpp/.o/' |sed 's/$(SRC_DIR)/$(BUILD_DIR)/')
+ifdef LIBRARY
+  MAIN_OBJECTS=$(shell find $(SRC_MAIN_DIR) -name *.cpp |grep -v 'main.cpp' |sed 's/.cpp/.o/' |sed 's/$(SRC_DIR)/$(BUILD_DIR)/')
+else
+  MAIN_OBJECTS=$(shell find $(SRC_MAIN_DIR) -name *.cpp |sed 's/.cpp/.o/' |sed 's/$(SRC_DIR)/$(BUILD_DIR)/')
+endif
 TEST_OBJECTS=$(shell find $(SRC_DIR) -name *.cpp |grep -v 'main.cpp' |sed 's/.cpp/.o/' |sed 's/$(SRC_DIR)/$(BUILD_DIR)/')
 
 MAIN_EXEC_APP=$(BUILD_MAIN_DIR)/$(PROJECT_NAME)
@@ -124,6 +136,12 @@ run.test:
 prod: clean
 	make "OPTIMIZE=1" build
 	make msgfmt
+
+lib: clean init
+	make "OPTIMIZE=1" "LIBRARY=1" compile
+	ld -G $(BUILD_MAIN_DIR)/*.o -o $(BUILD_MAIN_DIR)/lib$(PROJECT_NAME).so.$(MAJOR).$(MINOR).$(RELEASE)
+	ln -sf lib$(PROJECT_NAME).so.$(MAJOR).$(MINOR).$(RELEASE) $(BUILD_MAIN_DIR)/lib$(PROJECT_NAME).so.$(MAJOR)
+	ln -sf lib$(PROJECT_NAME).so.$(MAJOR) $(BUILD_MAIN_DIR)/lib$(PROJECT_NAME).so
 
 install:
 	cp -f bin/$(PROJECT_NAME) $(PREFIX)/

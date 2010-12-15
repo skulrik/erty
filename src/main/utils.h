@@ -85,15 +85,41 @@ inline std::string toUpper(const std::string& str)
     return upperStr;
 }
 
-inline bool stringToBool(const std::string& value)
+/**
+ * Verify if a string represent a true value.
+ * @param value the string to verify.
+ * @return true if the string represent a true value, else false.
+ */
+inline bool isTrue(const std::string& value)
 {
     std::string loweredValue = toLower(value);
+    return ((loweredValue == "true") || (loweredValue == "t") || (loweredValue == "y") || (loweredValue == "yes") || (loweredValue == "on"));
+}
 
-    if ((loweredValue == "true") || (loweredValue == "t") || (loweredValue == "y") || (loweredValue == "yes") || (loweredValue == "on"))
+/**
+ * Verify if a string represent a false value.
+ * @param value the string to verify.
+ * @return true if the string represent a false value, else false.
+ */
+inline bool isFalse(const std::string& value)
+{
+    std::string loweredValue = toLower(value);
+    return ((loweredValue == "false") || (loweredValue == "f") || (loweredValue == "n") || (loweredValue == "no") || (loweredValue == "off"));
+}
+
+/**
+ * Return the boolean value of a string.
+ * @param value the string to verify.
+ * @return true if the string represent a true value, false if the string represent a false value.
+ * @throw std::runtime_exception if the string represent neither a true or false value.
+ */
+inline bool stringToBool(const std::string& value)
+{
+    if (isTrue(value))
     {
         return true;
     }
-    else if ((loweredValue == "false") || (loweredValue == "f") || (loweredValue == "n") || (loweredValue == "no") || (loweredValue == "off"))
+    else if (isFalse(value))
     {
         return false;
     }

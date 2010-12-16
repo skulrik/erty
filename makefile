@@ -174,7 +174,7 @@ lcov: clean.build build.test
 	$(TEST_EXEC_APP)
 	lcov --derive-func-data --directory $(BUILD_DIR) --base-directory . --capture --output-file $(REPORT_DIR)/lcov/$(PROJECT_NAME).capture.after.info
 	lcov --derive-func-data --add-tracefile $(REPORT_DIR)/lcov/$(PROJECT_NAME).capture.before.info --add-tracefile $(REPORT_DIR)/lcov/$(PROJECT_NAME).capture.after.info --output-file $(REPORT_DIR)/lcov/$(PROJECT_NAME).capture.info
-	lcov --derive-func-data --extract $(REPORT_DIR)/lcov/$(PROJECT_NAME).capture.info *$(PROJECT_NAME)* --output-file $(REPORT_DIR)/lcov/$(PROJECT_NAME).extract.info
+	lcov --derive-func-data --extract $(REPORT_DIR)/lcov/$(PROJECT_NAME).capture.info "*$(PROJECT_NAME)*" --output-file $(REPORT_DIR)/lcov/$(PROJECT_NAME).extract.info
 	genhtml -s -k --legend --demangle-cpp $(REPORT_DIR)/lcov/$(PROJECT_NAME).extract.info -o $(REPORT_DIR)/lcov/
 
 cccc:

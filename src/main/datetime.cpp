@@ -18,30 +18,21 @@
     along with erty.  If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 */
-#include "demangle.h"
-#include <cxxabi.h>
+
+#include "datetime.h"
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 namespace erty
 {
 
-#ifdef HAVE_CXA_DEMANGLE
-std::string demangle(const char* name)
+// ----------------------------------------------------------------------------
+// DATE TIME
+// ----------------------------------------------------------------------------
+
+boost::posix_time::ptime DateTime::Now()
 {
-    char buf[1024];
-    size_t size=sizeof(buf);
-    int status;
-    abi::__cxa_demangle (name,
-                         buf,
-                         &size,
-                         &status);
-    return std::string(buf);
+    return boost::posix_time::second_clock::local_time();
 }
-#else
-std::string demangle(const char* name)
-{
-    return std::string(name);
-}
-#endif
 // ----------------------------------------------------------------------------
 
 }

@@ -39,10 +39,7 @@ public:
      * Return the current date and time.
      * @return the current date and time.
      */
-    static boost::posix_time::ptime Now()
-    {
-        return boost::posix_time::second_clock::local_time();
-    }
+    static boost::posix_time::ptime Now();
 
 private:
     DISALLOW_DEFAULT_COPY_AND_ASSIGN(DateTime);

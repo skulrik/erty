@@ -18,32 +18,84 @@
     along with erty.  If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 */
-#include "ioc.h"
+
+#include "configuration-parser.h"
+#include "utils.h"
+
+#include <exception>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/xml_parser.hpp>
+
+using boost::property_tree::ptree;
 
 namespace erty
 {
 
 // ----------------------------------------------------------------------------
-// IOC CONTAINER
+// CONFIGURATION PARSER EXCEPTION
 // ----------------------------------------------------------------------------
 
-IoCException::IoCException(const char* message) :
-    std::runtime_error((_F("IoCException: %1%") % message).str())
+ConfigurationParserException::ConfigurationParserException(const char* message) :
+    std::runtime_error((_F("ConfigurationParserException: %1%") % message).str())
 {
 }
 // ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
-// IOC
+// CONFIGURATION PARSER
 // ----------------------------------------------------------------------------
 
-IoCContainer IoC::_iocContainer;
-// ----------------------------------------------------------------------------
-
-void IoC::UnRegisterAll()
+ConfigurationParser::ConfigurationParser() : _pt()
 {
-    _iocContainer.clear();
+}
+// ----------------------------------------------------------------------------
+
+ConfigurationParser::ConfigurationParser(const std::string& fileName) :_pt()
+{
+    try
+    {
+        read_xml(fileName, _pt);
+    }
+    catch (std::exception& e)
+    {
+        throw ConfigurationParserException(e.what());
+    }
+}
+// ----------------------------------------------------------------------------
+
+bool ConfigurationParser::hasChild(const std::string& childName)
+{
+    try
+    {
+        _pt.get(childName, "");
+        return true;
+    }
+    catch (std::exception& e)
+    {
+        return false;
+    }
+}
+// ----------------------------------------------------------------------------
+
+bool ConfigurationParser::hasChilds(const std::string& childsName)
+{
+    try
+    {
+        _pt.get_child(childsName);
+        return true;
+    }
+    catch (std::exception& e)
+    {
+        return false;
+    }
+}
+// ----------------------------------------------------------------------------
+
+ptree& ConfigurationParser::getPT()
+{
+    return _pt;
 }
 // ----------------------------------------------------------------------------
 
 }
+

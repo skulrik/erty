@@ -27,7 +27,6 @@
 #include <stdexcept>
 #include <string>
 #include <map>
-#include <boost/format.hpp>
 #include <boost/shared_ptr.hpp>
 
 namespace erty
@@ -43,8 +42,7 @@ public:
      * Create a new IoCException with a specific message.
      * @param message the exception message.
      */
-    IoCException(const char* message) :
-        std::runtime_error((_F("IoCException: %1%") % message).str()) {}
+    IoCException(const char* message);
 };
 
 /** Type in which are registered the instance. */
@@ -63,10 +61,7 @@ public:
      * @tparam T The object type.
      */
     template<class T>
-    static void Register(T* objectPtr)
-    {
-        Register<T>(getTypeName<T>(), objectPtr);
-    }
+    static void Register(T* objectPtr);
 
     /**
      * Register an object pointer to a specific name.
@@ -75,10 +70,7 @@ public:
      * @tparam T The object type.
      */
     template<class T>
-    static void Register(const std::string& name, T* objectPtr)
-    {
-        _iocContainer[name] = boost::shared_ptr<void>(objectPtr);
-    }
+    static void Register(const std::string& name, T* objectPtr);
 
     /**
      * Return an object pointer registred by its type name.
@@ -86,10 +78,7 @@ public:
      * @return the registered object.
      */
     template<class T>
-    static T* Resolve()
-    {
-        return Resolve<T>(getTypeName<T>());
-    }
+    static T* Resolve();
 
     /**
      * Return an object pointer registred by its registered name.
@@ -98,10 +87,7 @@ public:
      * @return the registered object.
      */
     template<class T>
-    static T* Resolve(const std::string& name)
-    {
-        return (T*)(_iocContainer[name].get());
-    }
+    static T* Resolve(const std::string& name);
 
     /**
      * Return true if an object is registered for a type.
@@ -109,10 +95,7 @@ public:
      * @return true if an object is registered, else false.
      */
     template<class T>
-    static bool IsRegistered()
-    {
-        return IsRegistered<T>(getTypeName<T>());
-    }
+    static bool IsRegistered();
 
     /**
      * Return true if an object is registered for a given name.
@@ -121,20 +104,14 @@ public:
      * @return true if an object is registered, else false.
      */
     template<class T>
-    static bool IsRegistered(const std::string& name)
-    {
-        return (_iocContainer.find(name) != _iocContainer.end());
-    }
+    static bool IsRegistered(const std::string& name);
 
     /**
      * Remove the registered object for a type.
      * @tparam T The object type.
      */
     template<class T>
-    static void UnRegister()
-    {
-        UnRegister<T>(getTypeName<T>());
-    }
+    static void UnRegister();
 
     /**
      * Remove the registered object to a specific name.
@@ -142,19 +119,12 @@ public:
      * @tparam T The object type.
      */
     template<class T>
-    static void UnRegister(const std::string& name)
-    {
-        Register<T>(name, 0);
-        _iocContainer.erase(name);
-    }
+    static void UnRegister(const std::string& name);
 
     /**
      * Unregister all objects present in the ioc container.
      */
-    static void UnRegisterAll()
-    {
-        _iocContainer.clear();
-    }
+    static void UnRegisterAll();
 
     /**
      * Retrieve an object from the ioc container, to inject it in the current context.
@@ -164,10 +134,7 @@ public:
      * @throe IoCException
      */
     template <class T>
-    static T& Inject(bool autocreate = true)
-    {
-        return Inject<T>(getTypeName<T>(), autocreate);
-    }
+    static T& Inject(bool autocreate = true);
 
     /**
      * Retrieve an object from the ioc container, to inject it in the current context.
@@ -178,27 +145,7 @@ public:
      * @throe IoCException
      */
     template <class T>
-    static T& Inject(const std::string& name, bool autocreate = true)
-    {
-        T* object = 0;
-
-        if (IoC::IsRegistered<T>(name))
-        {
-            object = IoC::Resolve<T>(name);
-        }
-        else if (autocreate)
-        {
-            object = new T();
-            IoC::Register<T>(name, object);
-        }
-
-        if (object == 0)
-        {
-            throw IoCException((_F("No object registered for type %1% with name %2%.") % getTypeName<T>() % name).str().c_str());
-        }
-
-        return *object;
-    }
+    static T& Inject(const std::string& name, bool autocreate = true);
 
 private:
 
@@ -208,10 +155,7 @@ private:
      * @return the type name
      */
     template <class T>
-    static std::string getTypeName()
-    {
-        return DEMANGLE(T);
-    }
+    static std::string getTypeName();
 
     /** The map name->instance. */
     static IoCContainer _iocContainer;
@@ -220,5 +164,7 @@ private:
 };
 
 }
+
+#include "ioc.hxx"
 
 #endif

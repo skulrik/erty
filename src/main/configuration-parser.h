@@ -26,7 +26,6 @@
 
 #include <exception>
 #include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser.hpp>
 
 using boost::property_tree::ptree;
 
@@ -43,8 +42,7 @@ public:
      * Create a new ConfigurationParserException with a specific message.
      * @param message the exception message.
      */
-    ConfigurationParserException(const char* message) :
-        std::runtime_error((_F("ConfigurationParserException: %1%") % message).str()) {}
+    ConfigurationParserException(const char* message);
 };
 /**
  * Class that can browse a confuguraton property tree.
@@ -56,71 +54,34 @@ public:
     /**
      * Default constructor.
      */
-    ConfigurationParser() : _pt()
-    {
-    }
+    ConfigurationParser();
 
     /**
      * Create a configuration parser by parsing a configuration file.
      * @param fileName the configuration file name.
      * @throw ConfigurationParserException
      */
-    ConfigurationParser(const std::string& fileName) :_pt()
-    {
-        try
-        {
-            read_xml(fileName, _pt);
-        }
-        catch (std::exception& e)
-        {
-            throw ConfigurationParserException(e.what());
-        }
-    }
+    ConfigurationParser(const std::string& fileName);
 
     /**
      * Check if a single property is present in the configuration.
      * @param childName the name of the property to check.
      * @return true if the property is present, else false.
      */
-    bool hasChild(const std::string& childName)
-    {
-        try
-        {
-            _pt.get(childName, "");
-            return true;
-        }
-        catch (std::exception& e)
-        {
-            return false;
-        }
-    }
+    bool hasChild(const std::string& childName);
 
     /**
      * Check if a mutiple property is present in the configuration.
      * @param childsName the name of the property to check.
      * @return true if the property is present, else false.
      */
-    bool hasChilds(const std::string& childsName)
-    {
-        try
-        {
-            _pt.get_child(childsName);
-            return true;
-        }
-        catch (std::exception& e)
-        {
-            return false;
-        }
-    }
+    bool hasChilds(const std::string& childsName);
 
     /**
      * Return the property tree for of the configuration.
      * @return the configuration property tree.
      */
-    ptree& getPT()
-    {
-        return _pt;
-    }
+    ptree& getPT();
 
 private:
     /** The configuration property tree. */

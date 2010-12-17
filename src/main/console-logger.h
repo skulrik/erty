@@ -22,11 +22,9 @@
 #ifndef _CONSOLE_LOGGER_H_
 #define _CONSOLE_LOGGER_H_
 
-#include <string>
-#include <iostream>
 #include "logger.h"
 #include "log-level.h"
-#include "utils.h"
+#include <string>
 
 namespace erty
 {
@@ -36,19 +34,13 @@ class ConsoleLogger : public Logger
 {
 public:
     /** Instanciate a new logger that will log to the console. */
-    ConsoleLogger()
-    {
-        uuid(__CLASS__);
-    }
+    ConsoleLogger();
 
     /**
      * Write a message to the console.
      * @param message the message to log.
      */
-    virtual void write(const LogLevel& /*level*/, const std::string& message)
-    {
-        std::cout << message;
-    }
+    virtual void write(const LogLevel& /*level*/, const std::string& message);
 };
 
 }

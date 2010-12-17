@@ -23,10 +23,8 @@
 #define _LOGGER_FACTORY_H_
 
 #include "logger.h"
-#include "console-logger.h"
-#include "file-logger.h"
-#include "syslog-logger.h"
-#include "utils.h"
+
+#include <string>
 
 namespace erty
 {
@@ -37,9 +35,7 @@ namespace erty
 class LoggerFactory
 {
 public:
-    virtual ~LoggerFactory()
-    {
-    }
+    virtual ~LoggerFactory();
 
     /**
      * Create a Logger, base on its type.
@@ -47,24 +43,7 @@ public:
      * @param param parameter used in Logger constructor.
      * @return a new Logger, or null if the type does not match any logger.
      */
-    virtual Logger* create(const std::string& type, const std::string& param)
-    {
-        std::string loweredType = toLower(type);
-
-        if (loweredType == "console")
-        {
-            return new ConsoleLogger();
-        }
-        else if (loweredType == "file")
-        {
-            return new FileLogger(param.c_str());
-        }
-        else if (loweredType == "syslog")
-        {
-            return new SyslogLogger();
-        }
-        return new NullLogger();;
-    }
+    virtual Logger* create(const std::string& type, const std::string& param);
 };
 
 }

@@ -33,16 +33,13 @@ namespace erty
 class Logger
 {
 public:
-    virtual ~Logger(void) {}
+    virtual ~Logger(void);
 
     /**
      * Return the unique identifier of the logger.
      * @return the unique identifier of the logger.
      */
-    virtual const std::string& uuid() const
-    {
-        return _uuid;
-    }
+    virtual const std::string& uuid() const;
 
     /**
      * Log a message.
@@ -59,10 +56,7 @@ protected:
      * Must be call in the constructor of each subclasses.
      * @param uuid the unique identifier of the logger.
      */
-    void uuid(const std::string& uuid)
-    {
-        _uuid = uuid;
-    }
+    void uuid(const std::string& uuid);
 
 private:
     /** The uniqueidentifier of the logger. */
@@ -75,10 +69,7 @@ private:
  * @param b the second identifier.
  * @return true if the two logger have the same uuid, else false.
  */
-inline bool operator==(const Logger& a, const Logger& b)
-{
-    return (a.uuid() == b.uuid());
-}
+bool operator==(const Logger& a, const Logger& b);
 
 /**
  * Special logger, that will not log anything.
@@ -87,17 +78,12 @@ class NullLogger : public Logger
 {
 public:
     /** Instanciate a new logger that will do nothing. */
-    NullLogger()
-    {
-        uuid(__CLASS__);
-    }
+    NullLogger();
 
     /**
      * Do nothing.
      */
-    virtual void write(const LogLevel& /*level*/, const std::string& /*message*/)
-    {
-    }
+    virtual void write(const LogLevel& level, const std::string& message);
 };
 
 }

@@ -24,7 +24,6 @@
 
 #include "demangle.h"
 #include <string>
-#include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 
 namespace erty
@@ -68,12 +67,7 @@ namespace erty
  * @param str the string to lowercase.
  * @return the lowercase version of the string.
  */
-inline std::string toLower(const std::string& str)
-{
-    std::string lowerStr = str;
-    boost::to_lower(lowerStr);
-    return lowerStr;
-}
+std::string toLower(const std::string& str);
 
 /**
  * Return a uppercase version of a string.
@@ -81,34 +75,21 @@ inline std::string toLower(const std::string& str)
  * @return the uppercase version of the string.
  * @throw std::runtime_error
  */
-inline std::string toUpper(const std::string& str)
-{
-    std::string upperStr = str;
-    boost::to_upper(upperStr);
-    return upperStr;
-}
+std::string toUpper(const std::string& str);
 
 /**
  * Verify if a string represent a true value.
  * @param value the string to verify.
  * @return true if the string represent a true value, else false.
  */
-inline bool isTrue(const std::string& value)
-{
-    std::string loweredValue = toLower(value);
-    return ((loweredValue == "true") || (loweredValue == "t") || (loweredValue == "y") || (loweredValue == "yes") || (loweredValue == "on"));
-}
+bool isTrue(const std::string& value);
 
 /**
  * Verify if a string represent a false value.
  * @param value the string to verify.
  * @return true if the string represent a false value, else false.
  */
-inline bool isFalse(const std::string& value)
-{
-    std::string loweredValue = toLower(value);
-    return ((loweredValue == "false") || (loweredValue == "f") || (loweredValue == "n") || (loweredValue == "no") || (loweredValue == "off"));
-}
+bool isFalse(const std::string& value);
 
 /**
  * Return the boolean value of a string.
@@ -116,19 +97,7 @@ inline bool isFalse(const std::string& value)
  * @return true if the string represent a true value, false if the string represent a false value.
  * @throw std::runtime_exception if the string represent neither a true or false value.
  */
-inline bool stringToBool(const std::string& value)
-{
-    if (isTrue(value))
-    {
-        return true;
-    }
-    else if (isFalse(value))
-    {
-        return false;
-    }
-
-    throw std::runtime_error((_F("Cannot convert string %1% to bool value.") % value).str());
-}
+bool stringToBool(const std::string& value);
 
 }
 

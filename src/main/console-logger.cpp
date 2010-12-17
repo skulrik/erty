@@ -18,30 +18,31 @@
     along with erty.  If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 */
-#include "demangle.h"
-#include <cxxabi.h>
+
+#include "console-logger.h"
+#include "logger.h"
+#include "log-level.h"
+#include "utils.h"
+#include <string>
+#include <iostream>
 
 namespace erty
 {
 
-#ifdef HAVE_CXA_DEMANGLE
-std::string demangle(const char* name)
+// ----------------------------------------------------------------------------
+// CONSOLE LOGGER
+// ----------------------------------------------------------------------------
+
+ConsoleLogger::ConsoleLogger() : Logger()
 {
-    char buf[1024];
-    size_t size=sizeof(buf);
-    int status;
-    abi::__cxa_demangle (name,
-                         buf,
-                         &size,
-                         &status);
-    return std::string(buf);
+    uuid(__CLASS__);
 }
-#else
-std::string demangle(const char* name)
+// ----------------------------------------------------------------------------
+
+void ConsoleLogger::write(const LogLevel& /*level*/, const std::string& message)
 {
-    return std::string(name);
+    std::cout << message;
 }
-#endif
 // ----------------------------------------------------------------------------
 
 }

@@ -78,6 +78,7 @@ int mainImpl(int argc, char** argv, boost::function<int ()> applicationMain)
 
     return result;
 }
+// ----------------------------------------------------------------------------
 
 }
 

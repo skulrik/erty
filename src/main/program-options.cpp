@@ -38,23 +38,48 @@ using boost::property_tree::ptree;
 namespace erty
 {
 
+// ----------------------------------------------------------------------------
+// INVALID OPTION EXCEPTION
+// ----------------------------------------------------------------------------
+
+InvalidOptionException::InvalidOptionException(const char* message) :
+    std::runtime_error((_F("InvalidOptionException: %1%") % message).str())
+{
+}
+
+// ----------------------------------------------------------------------------
+// CONFIGURATION OPTION PARSING EXCEPTION
+// ----------------------------------------------------------------------------
+
+ConfiguredOptionParsingException::ConfiguredOptionParsingException(const char* message) :
+    std::runtime_error((_F("ConfiguredOptionParsingException: %1%") % message).str())
+{
+}
+
+// ----------------------------------------------------------------------------
+// PROGRAM OPTIONS
+// ----------------------------------------------------------------------------
+
 template <class T>
 T getOptionValue(const po::variables_map& vm, const std::string& optionName)
 {
     return vm[optionName].as<T>();
 }
+// ----------------------------------------------------------------------------
 
 template <>
 bool getOptionValue<bool>(const po::variables_map& vm, const std::string& optionName)
 {
     return vm.count(optionName);
 }
+// ----------------------------------------------------------------------------
 
 template <>
 int getOptionValue<int>(const po::variables_map& vm, const std::string& optionName)
 {
     return vm[optionName].as<int>();
 }
+// ----------------------------------------------------------------------------
 
 ProgramOptions::ProgramOptions(int argc, char** argv) :
     _desc(_("Allowed options")), _vm()
@@ -69,6 +94,7 @@ ProgramOptions::ProgramOptions(int argc, char** argv) :
     applyCommandLineValues(argc, argv, _vm, false);
     po::notify(_vm);
 }
+// ----------------------------------------------------------------------------
 
 void ProgramOptions::loadPreDefinedOptions()
 {
@@ -76,6 +102,7 @@ void ProgramOptions::loadPreDefinedOptions()
     ("help,h", _("Display this message"))
     ("config-file,c", po::value<std::string>()->default_value("conf/config.xml"), _("Configuration file path"));
 }
+// ----------------------------------------------------------------------------
 
 void ProgramOptions::loadConfiguredOptions()
 {
@@ -104,6 +131,7 @@ void ProgramOptions::loadConfiguredOptions()
         throw ConfiguredOptionParsingException(e.what());
     }
 }
+// ----------------------------------------------------------------------------
 
 void ProgramOptions::addOption(const std::string& name, const std::string& desc, const std::string& type, const std::string& value)
 {
@@ -133,6 +161,7 @@ void ProgramOptions::addOption(const std::string& name, const std::string& desc,
         throw std::runtime_error((_F("Unknown program option type %1% for option %2%") % type % name).str());
     }
 }
+// ----------------------------------------------------------------------------
 
 void ProgramOptions::applyCommandLineValues(int argc, char** argv, po::variables_map& vm, bool allowUnknown)
 {
@@ -152,16 +181,19 @@ void ProgramOptions::applyCommandLineValues(int argc, char** argv, po::variables
         throw InvalidOptionException(e.what());
     }
 }
+// ----------------------------------------------------------------------------
 
 std::string ProgramOptions::getConfigFilePath()
 {
     return get<std::string>("config-file");
 }
+// ----------------------------------------------------------------------------
 
 bool ProgramOptions::isHelpMode()
 {
     return get<bool>("help");
 }
+// ----------------------------------------------------------------------------
 
 std::string ProgramOptions::getUsage()
 {
@@ -171,6 +203,7 @@ std::string ProgramOptions::getUsage()
        << _desc;
     return ss.str();
 }
+// ----------------------------------------------------------------------------
 
 }
 

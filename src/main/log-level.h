@@ -22,9 +22,6 @@
 #ifndef _LOG_LEVEL_H_
 #define _LOG_LEVEL_H_
 
-#include <limits>
-#include <syslog.h>
-
 namespace erty
 {
 
@@ -34,29 +31,19 @@ namespace erty
 class LogLevel
 {
 public:
+    virtual ~LogLevel();
+
     /** Return the logging level as a character string. */
-    const char* level() const
-    {
-        return _level;
-    }
+    const char* level() const;
 
     /** return the logging prioriry value. */
-    unsigned int priority() const
-    {
-        return _priority;
-    }
+    unsigned int priority() const;
 
     /** return the logging prioriry value for syslog. */
-    unsigned int syslogPriority() const
-    {
-        return _syslogPriority;
-    }
+    unsigned int syslogPriority() const;
 
 protected:
-    LogLevel(const char* level, const unsigned int priority, const unsigned int syslogPriority)
-        : _level(level), _priority(priority), _syslogPriority(syslogPriority)
-    {
-    }
+    LogLevel(const char* level, const unsigned int priority, const unsigned int syslogPriority);
 
 private:
     const char* _level;
@@ -68,81 +55,63 @@ private:
 class Debug : public LogLevel
 {
 public:
-    Debug() : LogLevel("DEBUG", 0, LOG_DEBUG)
-    {
-    }
+    Debug();
 };
 
 /** trigger an information log message */
 class Info : public LogLevel
 {
 public:
-    Info() : LogLevel("INFO", 10, LOG_INFO)
-    {
-    }
+    Info();
 };
 
 /** Trigger a notice log message */
 class Notice : public LogLevel
 {
 public:
-    Notice() : LogLevel("NOTICE", 20, LOG_NOTICE)
-    {
-    }
+    Notice();
 };
 
 /** Trigger a warning log message */
 class Warning : public LogLevel
 {
 public:
-    Warning() : LogLevel("WARNING", 30, LOG_WARNING)
-    {
-    }
+    Warning();
 };
 
 /** Trigger an error log message */
 class Error : public LogLevel
 {
 public:
-    Error() : LogLevel("ERROR", 40, LOG_ERR)
-    {
-    }
+    Error();
 };
 
 /** Trigger a critical log message */
 class Critical : public LogLevel
 {
 public:
-    Critical() : LogLevel("CRITICAL", 50, LOG_CRIT)
-    {
-    }
+    Critical();
 };
 
 /** Trigger an alert log message */
 class Alert : public LogLevel
 {
 public:
-    Alert() : LogLevel("ALERT", 60, LOG_ALERT)
-    {
-    }
+    Alert();
 };
 
 /** Trigger an emergency log message */
 class Emergency : public LogLevel
 {
 public:
-    Emergency() : LogLevel("EMERGENCY", 70, LOG_EMERG)
-    {
-    }
+    Emergency();
 };
 
 /** Trigger a message that will not be logged. */
 class NullLogLevel : public LogLevel
 {
 public:
-    NullLogLevel() : LogLevel("NULL", std::numeric_limits<unsigned int>::max(), -1)
-    {
-    }
+    NullLogLevel();
 };
 
 }

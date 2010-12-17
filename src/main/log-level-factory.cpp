@@ -18,32 +18,62 @@
     along with erty.  If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 */
-#include "ioc.h"
+
+#include "log-level-factory.h"
+#include "log-level.h"
+#include "utils.h"
 
 namespace erty
 {
 
 // ----------------------------------------------------------------------------
-// IOC CONTAINER
+// LOG LEVEL FACTORY
 // ----------------------------------------------------------------------------
 
-IoCException::IoCException(const char* message) :
-    std::runtime_error((_F("IoCException: %1%") % message).str())
+LogLevelFactory::~LogLevelFactory()
 {
 }
 // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
-// IOC
-// ----------------------------------------------------------------------------
-
-IoCContainer IoC::_iocContainer;
-// ----------------------------------------------------------------------------
-
-void IoC::UnRegisterAll()
+LogLevel* LogLevelFactory::create(const std::string& levelName)
 {
-    _iocContainer.clear();
+    std::string loweredLevelName = toLower(levelName);
+
+    if (loweredLevelName == "debug")
+    {
+        return new Debug();
+    }
+    else if (loweredLevelName == "info")
+    {
+        return new Info();
+    }
+    else if (loweredLevelName == "notice")
+    {
+        return new Notice();
+    }
+    else if (loweredLevelName == "warning")
+    {
+        return new Warning();
+    }
+    else if (loweredLevelName == "error")
+    {
+        return new Error();
+    }
+    else if (loweredLevelName == "critical")
+    {
+        return new Critical();
+    }
+    else if (loweredLevelName == "alert")
+    {
+        return new Alert();
+    }
+    else if (loweredLevelName == "emergency")
+    {
+        return new Emergency();
+    }
+    return new NullLogLevel();;
 }
 // ----------------------------------------------------------------------------
 
 }
+

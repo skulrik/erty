@@ -23,10 +23,8 @@
 #define _SYSLOG_LOGGER_H_
 
 #include <string>
-#include <syslog.h>
 #include "logger.h"
 #include "log-level.h"
-#include "utils.h"
 
 namespace erty
 {
@@ -36,27 +34,17 @@ class SyslogLogger : public Logger
 {
 public:
     /** Instanciate a new logger that will log using the syslog facility. */
-    SyslogLogger()
-    {
-        uuid(__CLASS__);
-        openlog(NULL, LOG_PID, 0);
-    }
+    SyslogLogger();
 
     /** Closethe syslog log. */
-    virtual ~SyslogLogger()
-    {
-        closelog();
-    }
+    virtual ~SyslogLogger();
 
     /**
      * Send a message to syslog.
      * @param level the log level of the message.
      * @param message the message to log.
      */
-    virtual void write(const LogLevel& level, const std::string& message)
-    {
-        syslog(level.syslogPriority(), message.c_str(), 0);
-    }
+    virtual void write(const LogLevel& level, const std::string& message);
 };
 
 }

@@ -18,30 +18,44 @@
     along with erty.  If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 */
-#include "demangle.h"
-#include <cxxabi.h>
+
+#include "file-logger.h"
+#include "logger.h"
+#include "log-level.h"
+#include "utils.h"
+#include <string>
+#include <fstream>
+#include <sstream>
 
 namespace erty
 {
 
-#ifdef HAVE_CXA_DEMANGLE
-std::string demangle(const char* name)
+// ----------------------------------------------------------------------------
+// FILE LOGGER
+// ----------------------------------------------------------------------------
+
+FileLogger::FileLogger(const char* fileName)
 {
-    char buf[1024];
-    size_t size=sizeof(buf);
-    int status;
-    abi::__cxa_demangle (name,
-                         buf,
-                         &size,
-                         &status);
-    return std::string(buf);
+    std::stringstream ss;
+    ss << __CLASS__ << "::" << fileName;
+    uuid(ss.str());
+
+    _file.open(fileName, std::ios::app);
+    _file.seekp(std::ios::beg);
 }
-#else
-std::string demangle(const char* name)
+// ----------------------------------------------------------------------------
+
+FileLogger::~FileLogger()
 {
-    return std::string(name);
+    _file.close();
 }
-#endif
+// ----------------------------------------------------------------------------
+
+void FileLogger::write(const LogLevel& /*level*/, const std::string& message)
+{
+    _file << message;
+    _file.flush();
+}
 // ----------------------------------------------------------------------------
 
 }

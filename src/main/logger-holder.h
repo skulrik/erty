@@ -22,18 +22,14 @@
 #ifndef _LOGGER_HOLDER_H_
 #define _LOGGER_HOLDER_H_
 
-#include <sstream>
 #include <string>
 #include <list>
 #include <map>
 #include <boost/shared_ptr.hpp>
-#include <boost/foreach.hpp>
 
 #include "logger.h"
 #include "log-level.h"
-#include "datetime.h"
 #include "utils.h"
-#include "ioc.h"
 
 namespace erty
 {
@@ -125,10 +121,7 @@ typedef boost::shared_ptr<Logger> LoggerPtr;
  * @param b the second LoggerPtr.
  * @return true id both LoggerPtr are equals, else false.
  */
-inline bool operator==(LoggerPtr a, LoggerPtr b)
-{
-    return (*(a.get()) == *(b.get()));
-}
+bool operator==(LoggerPtr a, LoggerPtr b);
 
 /** Type for the list of all loggers. */
 typedef std::list<LoggerPtr> LoggerList;
@@ -141,10 +134,7 @@ class LoggerHolder
 public:
 
     /** LoggerHolder defaulr constructor. */
-    LoggerHolder() :
-        _logComponents(), _loggerList()
-    {
-    }
+    LoggerHolder();
 
     /**
      * Register a new logger.
@@ -152,27 +142,12 @@ public:
      * @param logger the logger to register.
      * @return the registered logger.
      */
-    static Logger* RegisterLogger(Logger* logger)
-    {
-        LoggerHolder& holder = IoC::Inject<LoggerHolder>();
-        LoggerPtr loggerPtr = LoggerPtr(logger);
-
-        LoggerList::iterator loggerIter = std::find(holder._loggerList.begin(), holder._loggerList.end(), loggerPtr);
-        if (loggerIter == holder._loggerList.end())
-        {
-            holder._loggerList.push_back(loggerPtr);
-        }
-        return logger;
-    }
+    static Logger* RegisterLogger(Logger* logger);
 
     /**
      * Unregister all registered loggers.
      */
-    static void UnregisterAllLoggers()
-    {
-        LoggerHolder& holder = IoC::Inject<LoggerHolder>();
-        holder._loggerList.clear();
-    }
+    static void UnregisterAllLoggers();
 
     /**
      * Register a new log component.
@@ -180,11 +155,7 @@ public:
      * @param component the component to register.
      * @param level only log message with priority greater or equal to this level will be logged.
      */
-    static void RegisterLogComponent(const std::string& component, const LogLevel& level)
-    {
-        LoggerHolder& holder = IoC::Inject<LoggerHolder>();
-        holder._logComponents[component] = level.priority();
-    }
+    static void RegisterLogComponent(const std::string& component, const LogLevel& level);
 
     /*
      * Log method dispatcher by Loglevel.
@@ -195,22 +166,7 @@ public:
      * @param line line in which the log call was triggered.
      * @param message the message to log.
      */
-    static void Log(const LogLevel& level, const char* component, const char* function, const char* file, const int line, const char* message)
-    {
-        std::stringstream ss;
-        ss << "[" << level.level() << "] [" << DateTime::Now() << "] [" << component << "] from " << function << " in " << file << ":" << line << " - " << message << std::endl;
-
-        LoggerHolder& holder = IoC::Inject<LoggerHolder>();
-        unsigned int priority = holder.getComponentPriority(component);
-
-        if (level.priority() >= priority)
-        {
-            BOOST_FOREACH(LoggerPtr& logger, holder._loggerList)
-            {
-                logger->write(level, ss.str());
-            }
-        }
-    }
+    static void Log(const LogLevel& level, const char* component, const char* function, const char* file, const int line, const char* message);
 
 private:
 
@@ -219,20 +175,7 @@ private:
      * @param component the component from which we want the priority.
      * @return the registered priority for the component, or the Info priority if the component is not registered.
      */
-    unsigned int getComponentPriority(const std::string& component) const
-    {
-#ifdef DEBUG
-        unsigned int priority = Debug().priority();
-#else
-        unsigned int priority = Info().priority();
-#endif
-        LogComponents::const_iterator logComponent = _logComponents.find(component);
-        if (logComponent != _logComponents.end())
-        {
-            priority = logComponent->second;
-        }
-        return priority;
-    }
+    unsigned int getComponentPriority(const std::string& component) const;
 
     /** Keep the list of registered base priority by log component. */
     LogComponents _logComponents;

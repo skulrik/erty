@@ -42,8 +42,7 @@ public:
      * Create a new InvalidOptionException with a specific message.
      * @param message the exception message.
      */
-    InvalidOptionException(const char* message) :
-        std::runtime_error((_F("InvalidOptionException: %1%") % message).str()) {}
+    InvalidOptionException(const char* message);
 };
 
 /**
@@ -56,8 +55,7 @@ public:
      * Create a new ConfiguredOptionParsingException with a specific message.
      * @param message the exception message.
      */
-    ConfiguredOptionParsingException(const char* message) :
-        std::runtime_error((_F("ConfiguredOptionParsingException: %1%") % message).str()) {}
+    ConfiguredOptionParsingException(const char* message);
 };
 
 /**
@@ -110,10 +108,7 @@ public:
      * @return the value of the option.
      */
     template<class T>
-    T get(const std::string& optionName)
-    {
-        return getOptionValue<T>(_vm, optionName);
-    }
+    T get(const std::string& optionName);
 
 private:
 
@@ -156,5 +151,7 @@ private:
 };
 
 }
+
+#include "program-options.hxx"
 
 #endif

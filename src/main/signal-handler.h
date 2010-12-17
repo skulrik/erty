@@ -22,10 +22,7 @@
 #ifndef _SIGNAL_HANDLER_H_
 #define _SIGNAL_HANDLER_H_
 
-#include <stdio.h>
-#include <execinfo.h>
 #include <signal.h>
-#include <stdlib.h>
 
 namespace erty
 {
@@ -35,19 +32,7 @@ namespace erty
  * @param sig the signal that trigger the function call.
  * @see http://stackoverflow.com/questions/77005/how-to-generate-a-stacktrace-when-my-gcc-c-app-crashes
  */
-inline void printStacktrace(int sig)
-{
-    void *array[10];
-    size_t size;
-
-    // get void*'s for all entries on the stack
-    size = backtrace(array, 10);
-
-    // print out all the frames to stderr
-    fprintf(stderr, "Error: signal %d:\n", sig);
-    backtrace_symbols_fd(array, size, 2);
-    exit(EXIT_FAILURE);
-}
+void printStacktrace(int sig);
 
 }
 

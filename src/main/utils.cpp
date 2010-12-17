@@ -18,32 +18,59 @@
     along with erty.  If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 */
-#include "ioc.h"
+#include "utils.h"
+#include "demangle.h"
+#include <string>
+#include <boost/algorithm/string.hpp>
+#include <boost/format.hpp>
 
 namespace erty
 {
 
-// ----------------------------------------------------------------------------
-// IOC CONTAINER
-// ----------------------------------------------------------------------------
-
-IoCException::IoCException(const char* message) :
-    std::runtime_error((_F("IoCException: %1%") % message).str())
+std::string toLower(const std::string& str)
 {
+    std::string lowerStr = str;
+    boost::to_lower(lowerStr);
+    return lowerStr;
 }
 // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
-// IOC
-// ----------------------------------------------------------------------------
-
-IoCContainer IoC::_iocContainer;
-// ----------------------------------------------------------------------------
-
-void IoC::UnRegisterAll()
+std::string toUpper(const std::string& str)
 {
-    _iocContainer.clear();
+    std::string upperStr = str;
+    boost::to_upper(upperStr);
+    return upperStr;
+}
+// ----------------------------------------------------------------------------
+
+bool isTrue(const std::string& value)
+{
+    std::string loweredValue = toLower(value);
+    return ((loweredValue == "true") || (loweredValue == "t") || (loweredValue == "y") || (loweredValue == "yes") || (loweredValue == "on"));
+}
+// ----------------------------------------------------------------------------
+
+bool isFalse(const std::string& value)
+{
+    std::string loweredValue = toLower(value);
+    return ((loweredValue == "false") || (loweredValue == "f") || (loweredValue == "n") || (loweredValue == "no") || (loweredValue == "off"));
+}
+// ----------------------------------------------------------------------------
+
+bool stringToBool(const std::string& value)
+{
+    if (isTrue(value))
+    {
+        return true;
+    }
+    else if (isFalse(value))
+    {
+        return false;
+    }
+
+    throw std::runtime_error((_F("Cannot convert string %1% to bool value.") % value).str());
 }
 // ----------------------------------------------------------------------------
 
 }
+

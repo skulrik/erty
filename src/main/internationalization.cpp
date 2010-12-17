@@ -29,5 +29,6 @@ void internationalize(const char* domainName, const char* dirName)
     bindtextdomain(domainName, dirName);
     textdomain(domainName);
 }
+// ----------------------------------------------------------------------------
 
 }

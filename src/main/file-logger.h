@@ -24,10 +24,8 @@
 
 #include <string>
 #include <fstream>
-#include <sstream>
 #include "logger.h"
 #include "log-level.h"
-#include "utils.h"
 
 namespace erty
 {
@@ -40,31 +38,16 @@ public:
      * Instanciate a new FileLogger.
      * @param fileName the file name of the file to ouput message into it.
      */
-    FileLogger(const char* fileName)
-    {
-        std::stringstream ss;
-        ss << __CLASS__ << "::" << fileName;
-        uuid(ss.str());
-
-        _file.open(fileName, std::ios::app);
-        _file.seekp(std::ios::beg);
-    }
+    FileLogger(const char* fileName);
 
     /** Close the log file. */
-    virtual ~FileLogger()
-    {
-        _file.close();
-    }
+    virtual ~FileLogger();
 
     /**
      * Write a message in the file..
      * @param message the message to log.
      */
-    virtual void write(const LogLevel& /*level*/, const std::string& message)
-    {
-        _file << message;
-        _file.flush();
-    }
+    virtual void write(const LogLevel& /*level*/, const std::string& message);
 
 private:
 

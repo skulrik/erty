@@ -23,7 +23,8 @@
 #define _LOG_LEVEL_FACTORY_H_
 
 #include "log-level.h"
-#include "utils.h"
+
+#include <string>
 
 namespace erty
 {
@@ -34,53 +35,14 @@ namespace erty
 class LogLevelFactory
 {
 public:
-    virtual ~LogLevelFactory()
-    {
-    }
+    virtual ~LogLevelFactory();
 
     /**
      * Create a LogLevel, base on its name.
      * @param levelName the level name.
      * @return a new LogLevel, or null if the name does not match any level.
      */
-    virtual LogLevel* create(const std::string& levelName)
-    {
-        std::string loweredLevelName = toLower(levelName);
-
-        if (loweredLevelName == "debug")
-        {
-            return new Debug();
-        }
-        else if (loweredLevelName == "info")
-        {
-            return new Info();
-        }
-        else if (loweredLevelName == "notice")
-        {
-            return new Notice();
-        }
-        else if (loweredLevelName == "warning")
-        {
-            return new Warning();
-        }
-        else if (loweredLevelName == "error")
-        {
-            return new Error();
-        }
-        else if (loweredLevelName == "critical")
-        {
-            return new Critical();
-        }
-        else if (loweredLevelName == "alert")
-        {
-            return new Alert();
-        }
-        else if (loweredLevelName == "emergency")
-        {
-            return new Emergency();
-        }
-        return new NullLogLevel();;
-    }
+    virtual LogLevel* create(const std::string& levelName);
 };
 
 }

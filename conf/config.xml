@@ -20,7 +20,7 @@
             </logger>
             <logger>
                 <type>file</type>
-                <file-name>CPP_APP_TEMPLATE.log</file-name>
+                <file-name>erty.log</file-name>
             </logger>
             <logger>
                 <type>syslog</type>

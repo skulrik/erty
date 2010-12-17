@@ -1,4 +1,4 @@
-PROJECT_NAME=CPP_APP_TEMPLATE
+PROJECT_NAME=erty
 
 PREFIX=/usr/local/bin
 

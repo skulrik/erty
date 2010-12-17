@@ -30,5 +30,5 @@ msgid "Hello, World!"
 msgstr ""
 
 #: src/main/program-options.cpp:23
-msgid "Usage: CPP_APP_TEMPLATE [options]"
+msgid "Usage: erty [options]"
 msgstr ""

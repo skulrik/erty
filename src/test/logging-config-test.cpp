@@ -2,20 +2,20 @@
 ===============================================================================
     COPYING PERMISSION STATEMENT
 ===============================================================================
-    This file is part of CPP_APP_TEMPLATE.
+    This file is part of erty.
 
-    CPP_APP_TEMPLATE is free software: you can redistribute it and/or modify
+    erty is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    CPP_APP_TEMPLATE is distributed in the hope that it will be useful,
+    erty is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with CPP_APP_TEMPLATE.  If not, see <http://www.gnu.org/licenses/>.
+    along with erty.  If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 */
 #include "gtest/gtest.h"
@@ -29,16 +29,16 @@
 using ::testing::_;
 using ::testing::Return;
 
-class LogLevelFactoryMock : public LogLevelFactory
+class LogLevelFactoryMock : public erty::LogLevelFactory
 {
 public:
-    MOCK_METHOD1(create, LogLevel*(const std::string& level));
+    MOCK_METHOD1(create, erty::LogLevel*(const std::string& level));
 };
 
-class LoggerFactoryMock : public LoggerFactory
+class LoggerFactoryMock : public erty::LoggerFactory
 {
 public:
-    MOCK_METHOD2(create, Logger*(const std::string& name, const std::string& param));
+    MOCK_METHOD2(create, erty::Logger*(const std::string& name, const std::string& param));
 };
 
 class LoggingConfTest : public ::testing::Test
@@ -53,28 +53,28 @@ protected:
     virtual void SetUp()
     {
         logLevelFactoryMock = new LogLevelFactoryMock();
-        IoC::Register<LogLevelFactory>(logLevelFactoryMock);
+        erty::IoC::Register<erty::LogLevelFactory>(logLevelFactoryMock);
 
         loggerFactoryMock = new LoggerFactoryMock();
-        IoC::Register<LoggerFactory>(loggerFactoryMock);
+        erty::IoC::Register<erty::LoggerFactory>(loggerFactoryMock);
 
     }
 
     virtual void TearDown()
     {
-        IoC::UnRegister<LogLevelFactory>();
-        IoC::UnRegister<LoggerFactory>();
+        erty::IoC::UnRegister<erty::LogLevelFactory>();
+        erty::IoC::UnRegister<erty::LoggerFactory>();
     }
 
-    LoggingConf loggingConf;
+    erty::LoggingConf loggingConf;
     LogLevelFactoryMock* logLevelFactoryMock;
     LoggerFactoryMock* loggerFactoryMock;
 };
 
 TEST_F(LoggingConfTest, TestLoadingOneComponentRegisterOneComponent)
 {
-    EXPECT_CALL(*logLevelFactoryMock, create(_)).Times(1).WillOnce(Return(new Info()));
-    IoC::Register<ConfigurationParser>(new ConfigurationParser("resources/test-data/config-one-component.xml"));
+    EXPECT_CALL(*logLevelFactoryMock, create(_)).Times(1).WillOnce(Return(new erty::Info()));
+    erty::IoC::Register<erty::ConfigurationParser>(new erty::ConfigurationParser("resources/test-data/config-one-component.xml"));
     loggingConf.setup();
 }
 
@@ -82,24 +82,24 @@ TEST_F(LoggingConfTest, TestLoadingTwoComponentRegisterTwoComponent)
 {
     EXPECT_CALL(*logLevelFactoryMock, create(_))
     .Times(2)
-    .WillOnce(Return(new Info()))
-    .WillOnce(Return(new Info()));
-    IoC::Register<ConfigurationParser>(new ConfigurationParser("resources/test-data/config-two-component.xml"));
+    .WillOnce(Return(new erty::Info()))
+    .WillOnce(Return(new erty::Info()));
+    erty::IoC::Register<erty::ConfigurationParser>(new erty::ConfigurationParser("resources/test-data/config-two-component.xml"));
     loggingConf.setup();
 }
 
 TEST_F(LoggingConfTest, TestLoadingOneLoggerRegisterOneLogger)
 {
-    EXPECT_CALL(*loggerFactoryMock, create("console",_)).Times(1).WillOnce(Return(new ConsoleLogger()));
-    IoC::Register<ConfigurationParser>(new ConfigurationParser("resources/test-data/config-one-logger.xml"));
+    EXPECT_CALL(*loggerFactoryMock, create("console",_)).Times(1).WillOnce(Return(new erty::ConsoleLogger()));
+    erty::IoC::Register<erty::ConfigurationParser>(new erty::ConfigurationParser("resources/test-data/config-one-logger.xml"));
     loggingConf.setup();
 }
 
 TEST_F(LoggingConfTest, TestLoadingTwoLoggerRegisterTwoLogger)
 {
-    EXPECT_CALL(*loggerFactoryMock, create("console",_)).Times(1).WillOnce(Return(new ConsoleLogger()));
-    EXPECT_CALL(*loggerFactoryMock, create("file","output.log")).Times(1).WillOnce(Return(new FileLogger("output.log")));
-    IoC::Register<ConfigurationParser>(new ConfigurationParser("resources/test-data/config-two-logger.xml"));
+    EXPECT_CALL(*loggerFactoryMock, create("console",_)).Times(1).WillOnce(Return(new erty::ConsoleLogger()));
+    EXPECT_CALL(*loggerFactoryMock, create("file","output.log")).Times(1).WillOnce(Return(new erty::FileLogger("output.log")));
+    erty::IoC::Register<erty::ConfigurationParser>(new erty::ConfigurationParser("resources/test-data/config-two-logger.xml"));
     loggingConf.setup();
 }
 

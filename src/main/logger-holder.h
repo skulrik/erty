@@ -2,20 +2,20 @@
 ===============================================================================
     COPYING PERMISSION STATEMENT
 ===============================================================================
-    This file is part of CPP_APP_TEMPLATE.
+    This file is part of erty.
 
-    CPP_APP_TEMPLATE is free software: you can redistribute it and/or modify
+    erty is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    CPP_APP_TEMPLATE is distributed in the hope that it will be useful,
+    erty is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with CPP_APP_TEMPLATE.  If not, see <http://www.gnu.org/licenses/>.
+    along with erty.  If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 */
 #pragma once
@@ -35,20 +35,23 @@
 #include "utils.h"
 #include "ioc.h"
 
+namespace erty
+{
+
 /**
  * Macro to register a new Logger.
  * @param logger the logger to register.
  */
-#define REGISTER_LOGGER(logger) LoggerHolder::RegisterLogger(new logger)
+#define REGISTER_LOGGER(logger) erty::LoggerHolder::RegisterLogger(new logger)
 
 /** Macro that unregister all loggers. */
-#define UNREGISTER_ALL_LOGGERS() LoggerHolder::UnregisterAllLoggers()
+#define UNREGISTER_ALL_LOGGERS() erty::LoggerHolder::UnregisterAllLoggers()
 
 /** Macro that register a new log component.
  * @param component the component identifier string
  * @param level the associate logging level.  Only log message with priority greater or equal that this level will be log.
  */
-#define REGISTER_LOG_COMPONENT(component,level) LoggerHolder::RegisterLogComponent(component, level())
+#define REGISTER_LOG_COMPONENT(component,level) erty::LoggerHolder::RegisterLogComponent(component, level())
 
 /**
  * Macros to log a debug message
@@ -56,7 +59,7 @@
  * @param message the message to log
  */
 #ifdef DEBUG
-#define DEBUG_LOG(component,message) LoggerHolder::Log(Debug(), component, __FUNCTION__, __FILE__, __LINE__, message)
+#define DEBUG_LOG(component,message) erty::LoggerHolder::Log(erty::Debug(), component, __FUNCTION__, __FILE__, __LINE__, message)
 #else
 #define DEBUG_LOG(component,message)
 #endif
@@ -66,49 +69,49 @@
  * @param component the log component
  * @param message the message to log
  */
-#define INFO_LOG(component,message) LoggerHolder::Log(Info(), component, __FUNCTION__, __FILE__, __LINE__, message)
+#define INFO_LOG(component,message) erty::LoggerHolder::Log(erty::Info(), component, __FUNCTION__, __FILE__, __LINE__, message)
 
 /**
  * Macros to log a notice message
  * @param component the log component
  * @param message the message to log
  */
-#define NOTICE_LOG(component,message) LoggerHolder::Log(Notice(), component, __FUNCTION__, __FILE__, __LINE__, message)
+#define NOTICE_LOG(component,message) erty::LoggerHolder::Log(erty::Notice(), component, __FUNCTION__, __FILE__, __LINE__, message)
 
 /**
  * Macros to log a warning message
  * @param component the log component
  * @param message the message to log
  */
-#define WARNING_LOG(component,message) LoggerHolder::Log(Warning(), component, __FUNCTION__, __FILE__, __LINE__, message)
+#define WARNING_LOG(component,message) erty::LoggerHolder::Log(erty::Warning(), component, __FUNCTION__, __FILE__, __LINE__, message)
 
 /**
  * Macros to log an error message
  * @param component the log component
  * @param message the message to log
  */
-#define ERROR_LOG(component,message) LoggerHolder::Log(Error(), component, __FUNCTION__, __FILE__, __LINE__, message)
+#define ERROR_LOG(component,message) erty::LoggerHolder::Log(erty::Error(), component, __FUNCTION__, __FILE__, __LINE__, message)
 
 /**
  * Macros to log a critical message
  * @param component the log component
  * @param message the message to log
  */
-#define CRITICAL_LOG(component,message) LoggerHolder::Log(Critical(), component, __FUNCTION__, __FILE__, __LINE__, message)
+#define CRITICAL_LOG(component,message) erty::LoggerHolder::Log(erty::Critical(), component, __FUNCTION__, __FILE__, __LINE__, message)
 
 /**
  * Macros to log an alert message
  * @param component the log component
  * @param message the message to log
  */
-#define ALERT_LOG(component,message) LoggerHolder::Log(Alert(), component, __FUNCTION__, __FILE__, __LINE__, message)
+#define ALERT_LOG(component,message) erty::LoggerHolder::Log(erty::Alert(), component, __FUNCTION__, __FILE__, __LINE__, message)
 
 /**
  * Macros to log an emergency message
  * @param component the log component
  * @param message the message to log
  */
-#define EMERGENCY_LOG(component,message) LoggerHolder::Log(Emergency(), component, __FUNCTION__, __FILE__, __LINE__, message)
+#define EMERGENCY_LOG(component,message) erty::LoggerHolder::Log(erty::Emergency(), component, __FUNCTION__, __FILE__, __LINE__, message)
 
 /** Map of base priority by component. */
 typedef std::map<std::string, unsigned int> LogComponents;
@@ -239,5 +242,7 @@ private:
 
     DISALLOW_COPY_AND_ASSIGN(LoggerHolder);
 };
+
+}
 
 #endif

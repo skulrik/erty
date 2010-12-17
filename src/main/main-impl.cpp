@@ -2,20 +2,20 @@
 ===============================================================================
     COPYING PERMISSION STATEMENT
 ===============================================================================
-    This file is part of CPP_APP_TEMPLATE.
+    This file is part of erty.
 
-    CPP_APP_TEMPLATE is free software: you can redistribute it and/or modify
+    erty is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    CPP_APP_TEMPLATE is distributed in the hope that it will be useful,
+    erty is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with CPP_APP_TEMPLATE.  If not, see <http://www.gnu.org/licenses/>.
+    along with erty.  If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 */
 #include "main-impl.h"
@@ -29,6 +29,9 @@
 #include <exception>
 #include <boost/function.hpp>
 
+namespace erty
+{
+
 int mainImpl(int argc, char** argv, boost::function<int ()> applicationMain)
 {
     int result = EXIT_SUCCESS;
@@ -38,7 +41,7 @@ int mainImpl(int argc, char** argv, boost::function<int ()> applicationMain)
         signal(SIGSEGV, printStacktrace);
 
         // Set up locale using current LANG environment variable
-        internationalize("CPP_APP_TEMPLATE", "/usr/share/locale");
+        internationalize("erty", "/usr/share/locale");
 
         // Parse the command line program options, and register it into the IoC container
         ProgramOptions* programOptions = new ProgramOptions(argc, argv);
@@ -75,3 +78,6 @@ int mainImpl(int argc, char** argv, boost::function<int ()> applicationMain)
 
     return result;
 }
+
+}
+

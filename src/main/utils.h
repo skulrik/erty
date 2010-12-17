@@ -2,20 +2,20 @@
 ===============================================================================
     COPYING PERMISSION STATEMENT
 ===============================================================================
-    This file is part of CPP_APP_TEMPLATE.
+    This file is part of erty.
 
-    CPP_APP_TEMPLATE is free software: you can redistribute it and/or modify
+    erty is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    CPP_APP_TEMPLATE is distributed in the hope that it will be useful,
+    erty is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with CPP_APP_TEMPLATE.  If not, see <http://www.gnu.org/licenses/>.
+    along with erty.  If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 */
 #pragma once
@@ -26,6 +26,9 @@
 #include <string>
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
+
+namespace erty
+{
 
 /**
  * Insert a copy constructor and a assignment operator that do nothing in a class.
@@ -53,12 +56,12 @@
  * Define a shortcut to get the type name of an object.
  * @param object the object to retrieve it type name.
  */
-#define DEMANGLE(object) demangle(typeid(object).name()).c_str()
+#define DEMANGLE(object) erty::demangle(typeid(object).name()).c_str()
 
 /**
  * Define a shorcut macro to get the current object class name.
  */
-#define __CLASS__ demangle(typeid(*this).name()).c_str()
+#define __CLASS__ erty::demangle(typeid(*this).name()).c_str()
 
 /**
  * Return a lowercase version of a string.
@@ -125,6 +128,8 @@ inline bool stringToBool(const std::string& value)
     }
 
     throw std::runtime_error((_F("Cannot convert string %1% to bool value.") % value).str());
+}
+
 }
 
 #endif

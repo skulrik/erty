@@ -3,7 +3,7 @@ PROJECT_NAME=erty
 PREFIX=/usr/local/bin
 
 CXX=g++
-CXXFLAGS=-pedantic -Wall -Wextra -Werror -std=c++0x -D_FORTIFY_SOURCE=2 -DHAVE_CXA_DEMANGLE
+CXXFLAGS=-pedantic -Wall -Wextra -Werror -std=c++0x -D_FORTIFY_SOURCE=2 -DHAVE_CXA_DEMANGLE -fPIC
 
 CXXINCLUDES=-I. -I$(SRC_MAIN_DIR)
 CXXLIBS=-lboost_program_options -lboost_regex
@@ -21,24 +21,20 @@ ifdef PROFILE
   CXXLIBS+= -lgcov
 endif
 
+INSTALL_LIBDIR=/usr/lib
+INSTALL_INCDIR=/usr/include/$(PROJECT_NAME)
 MAJOR=0
 MINOR=1
 RELEASE=0
 
-ifdef LIBRARY
-  CXXFLAGS+= -fPIC
-endif
-
 SRC_DIR=src
 MAIN_DIR=main
-LIB_DIR=lib
 TEST_DIR=test
 SRC_MAIN_DIR=${SRC_DIR}/$(MAIN_DIR)
 SRC_TEST_DIR=${SRC_DIR}/$(TEST_DIR)
 
 BUILD_DIR=build
 BUILD_MAIN_DIR=${BUILD_DIR}/$(MAIN_DIR)
-BUILD_LIB_DIR=${BUILD_DIR}/$(LIB_DIR)
 BUILD_TEST_DIR=${BUILD_DIR}/$(TEST_DIR)
 
 RESOURCES_DIR=resources
@@ -56,14 +52,9 @@ CSCOPE_FILES=cscope.*
 
 SRC_FILES=$(shell find $(SRC_DIR) -name *.cpp)
 SRC_FILES+=$(shell find $(SRC_DIR) -name *.h)
-ifdef LIBRARY
-  MAIN_OBJECTS=$(shell find $(SRC_MAIN_DIR) -name *.cpp |grep -v 'main.cpp' |sed 's/.cpp/.o/' |sed 's/$(SRC_DIR)/$(BUILD_DIR)/' |sed 's/$(MAIN_DIR)/$(LIB_DIR)/')
-else
-  MAIN_OBJECTS=$(shell find $(SRC_MAIN_DIR) -name *.cpp |grep 'main.cpp' |sed 's/.cpp/.o/' |sed 's/$(SRC_DIR)/$(BUILD_DIR)/')
-endif
-TEST_OBJECTS=$(shell find $(SRC_DIR) -name *.cpp |grep -v 'main.cpp' |sed 's/.cpp/.o/' |sed 's/$(SRC_DIR)/$(BUILD_DIR)/')
+MAIN_OBJECTS=$(shell find $(SRC_MAIN_DIR) -name *.cpp |sed 's/.cpp/.o/' |sed 's/$(SRC_DIR)/$(BUILD_DIR)/')
+TEST_OBJECTS=$(shell find $(SRC_DIR) -name *.cpp |sed 's/.cpp/.o/' |sed 's/$(SRC_DIR)/$(BUILD_DIR)/')
 
-MAIN_EXEC_APP=$(BUILD_MAIN_DIR)/$(PROJECT_NAME)
 TEST_EXEC_APP=$(BUILD_TEST_DIR)/$(PROJECT_NAME)
 
 default: prod
@@ -90,7 +81,6 @@ clean.build:
 	rm -rf $(BUILD_DIR) $(BIN_DIR)
 init:
 	mkdir -p $(BUILD_MAIN_DIR)
-	mkdir -p $(BUILD_LIB_DIR)
 	mkdir -p $(BUILD_TEST_DIR)
 	mkdir -p $(REPORT_DIR)
 	mkdir -p $(BIN_DIR)
@@ -109,17 +99,6 @@ xgettext:
 msgfmt:
 	mkdir -p $(LOCALES_DIR)/mo/fr
 	msgfmt --check --output $(LOCALES_DIR)/mo/fr/$(PROJECT_NAME).mo $(LOCALES_DIR)/po/fr.po
-
-build:	init lib compile link
-	ln -sf ../$(MAIN_EXEC_APP) $(BIN_DIR)/$(PROJECT_NAME)
-
-compile: $(MAIN_OBJECTS)
-
-link:
-	$(CXX) $(MAIN_OBJECTS) $(CXXLIBS) -L$(BUILD_LIB_DIR) -l$(PROJECT_NAME) -o $(MAIN_EXEC_APP)
-
-run:	build
-	LD_LIBRARY_PATH=$(BUILD_LIB_DIR) $(MAIN_EXEC_APP)
 
 build.test: init compile.test link.test
 	ln -sf ../$(TEST_EXEC_APP) $(BIN_DIR)/$(PROJECT_NAME)_TEST
@@ -142,14 +121,18 @@ prod: clean
 	make "OPTIMIZE=1" build
 	make msgfmt
 
-lib: init
-	make "OPTIMIZE=1" "LIBRARY=1" compile
-	$(CXX) $(CXXLIBS) -shared $(BUILD_LIB_DIR)/*.o -o $(BUILD_LIB_DIR)/lib$(PROJECT_NAME).so.$(MAJOR).$(MINOR).$(RELEASE)
-	ln -sf lib$(PROJECT_NAME).so.$(MAJOR).$(MINOR).$(RELEASE) $(BUILD_LIB_DIR)/lib$(PROJECT_NAME).so.$(MAJOR)
-	ln -sf lib$(PROJECT_NAME).so.$(MAJOR) $(BUILD_LIB_DIR)/lib$(PROJECT_NAME).so
+build: init compile
+	$(CXX) $(CXXLIBS) -shared $(BUILD_MAIN_DIR)/*.o -o $(BUILD_MAIN_DIR)/lib$(PROJECT_NAME).so.$(MAJOR).$(MINOR).$(RELEASE)
+	ln -sf lib$(PROJECT_NAME).so.$(MAJOR).$(MINOR).$(RELEASE) $(BUILD_MAIN_DIR)/lib$(PROJECT_NAME).so.$(MAJOR)
+	ln -sf lib$(PROJECT_NAME).so.$(MAJOR) $(BUILD_MAIN_DIR)/lib$(PROJECT_NAME).so
+
+compile: $(MAIN_OBJECTS)
 
 install:
-	cp -f bin/$(PROJECT_NAME) $(PREFIX)/
+	cp -f $(BUILD_MAIN_DIR)/lib$(PROJECT_NAME).so* $(INSTALL_LIBDIR)/
+	mkdir -p $(INSTALL_INCDIR)
+	cp -f $(SRC_MAIN_DIR)/*.h $(INSTALL_INCDIR)/
+	cp -f $(SRC_MAIN_DIR)/*.hxx $(INSTALL_INCDIR)/
 	mkdir -p /usr/share/locale-langpack/fr_CA/LC_MESSAGES
 	cp -f $(LOCALES_DIR)/mo/fr/$(PROJECT_NAME).mo /usr/share/locale-langpack/fr_CA/LC_MESSAGES/
 
@@ -158,10 +141,8 @@ astyle:
 
 valgrind: clean.build build build.test
 	mkdir -p $(REPORT_DIR)/valgrind
-	LD_LIBRARY_PATH=$(BUILD_LIB_DIR) valgrind --xml=yes -v --leak-check=full --show-reachable=yes --leak-resolution=high --xml-file=$(REPORT_DIR)/valgrind/$(PROJECT_NAME).xml $(MAIN_EXEC_APP)
 	valgrind --xml=yes -v --leak-check=full --show-reachable=yes --leak-resolution=high --xml-file=$(REPORT_DIR)/valgrind/$(PROJECT_NAME)_TEST.xml $(TEST_EXEC_APP)
 	cp -f $(REPORT_TOOLS_DIR)/valgrind.xsl $(REPORT_DIR)/valgrind/
-	sed -i 's/<?xml version="1.0"?>/<?xml version="1.0"?>\n<?xml-stylesheet type="text\/xsl" href="valgrind.xsl"?>/' $(REPORT_DIR)/valgrind/$(PROJECT_NAME).xml
 	sed -i 's/<?xml version="1.0"?>/<?xml version="1.0"?>\n<?xml-stylesheet type="text\/xsl" href="valgrind.xsl"?>/' $(REPORT_DIR)/valgrind/$(PROJECT_NAME)_TEST.xml
 
 doxygen:
@@ -190,9 +171,6 @@ ccm:
 .PHONY:	default all report clean clean.build init ctags cscope xgettext msgfmt build compile link run build.test compile.test link.test test prod astyle valgrind doxygen lcov cccc ccm
 
 $(BUILD_MAIN_DIR)/%.o : $(SRC_MAIN_DIR)/%.cpp
-	$(CXX) -c $(CXXFLAGS) $(CXXINCLUDES) -o $@ $<
-
-$(BUILD_LIB_DIR)/%.o : $(SRC_MAIN_DIR)/%.cpp
 	$(CXX) -c $(CXXFLAGS) $(CXXINCLUDES) -o $@ $<
 
 $(BUILD_TEST_DIR)/%.o : $(SRC_TEST_DIR)/%.cpp

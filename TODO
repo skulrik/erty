@@ -1,3 +1,2 @@
 - Thread-Safe IoC singleton.
 - Config : extract all pt manipulation in ConfigurationParser class.
-- Change the install to copy the library to a specific directory (default to /usr/lib)

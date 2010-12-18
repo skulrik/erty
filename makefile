@@ -129,7 +129,9 @@ build: init compile
 compile: $(MAIN_OBJECTS)
 
 install:
-	cp -f $(BUILD_MAIN_DIR)/lib$(PROJECT_NAME).so* $(INSTALL_LIBDIR)/
+	cp -f $(BUILD_MAIN_DIR)/lib$(PROJECT_NAME).so.$(MAJOR).$(MINOR).$(RELEASE) $(INSTALL_LIBDIR)/
+	ln -sf lib$(PROJECT_NAME).so.$(MAJOR).$(MINOR).$(RELEASE) $(INSTALL_LIBDIR)/lib$(PROJECT_NAME).so.$(MAJOR)
+	ln -sf lib$(PROJECT_NAME).so.$(MAJOR) $(INSTALL_LIBDIR)/lib$(PROJECT_NAME).so
 	mkdir -p $(INSTALL_INCDIR)
 	cp -f $(SRC_MAIN_DIR)/*.h $(INSTALL_INCDIR)/
 	cp -f $(SRC_MAIN_DIR)/*.hxx $(INSTALL_INCDIR)/
